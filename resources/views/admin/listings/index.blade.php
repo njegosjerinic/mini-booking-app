@@ -1,0 +1,45 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <h1 class="mb-4">Ponuda smeštaja</h1>
+
+    <div class="row">
+        @foreach($listings as $listing)
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {{-- Slika smeštaja --}}
+                    @if($listing->image)
+                        <img src="{{ asset('storage/' . $listing->image) }}" class="card-img-top" alt="{{ $listing->naziv }}">
+                    @else
+                        <img src="https://via.placeholder.com/400x250?text=No+Image" class="card-img-top" alt="No image">
+                    @endif
+
+                    <div class="card-body d-flex flex-column">
+                        {{-- Naziv i lokacija --}}
+                        <h5 class="card-title">{{ $listing->naziv }}</h5>
+                        <p class="text-muted mb-1"><i class="bi bi-geo-alt"></i> {{ $listing->grad->naziv ?? 'Nepoznato' }}</p>
+
+                        {{-- Cena i info --}}
+                        <p class="fw-bold">{{ number_format($listing->cena, 2) }} € / noć</p>
+                        <p class="mb-2">
+                            🛏️ {{ $listing->broj_kreveta }} kreveta • 👥 Max {{ $listing->max_osoba }} osoba
+                        </p>
+
+                        {{-- Dugme za detalje --}}
+                        <a href="{{ route('admin.listings.edit', $listing->id) }}" class="btn btn-primary mt-auto">
+                            Pogledaj detalje
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+    {{-- Paginacija --}}
+    <div class="d-flex justify-content-center mt-4">
+        {{ $listings->links() }}
+    </div>
+</div>
+@endsection
+
