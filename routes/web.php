@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CityController as AdminCityController;
 use App\Http\Controllers\Admin\ListingController as AdminListingController;
@@ -52,19 +54,24 @@ Route::middleware(['auth', 'role:admin', 'prevent-back-history'])
     ->name('admin.')
     ->group(function () {
 
-    // Dashboard
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+        // Dashboard
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
 
-    // Gradovi
-    Route::resource('cities', AdminCityController::class);
+        // Gradovi
+        Route::resource('cities', AdminCityController::class);
 
-    // Admin CRUD za korisnike, smeštaje, rezervacije, recenzije
-    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
-    Route::resource('listings', App\Http\Controllers\Admin\ListingController::class);
-    Route::resource('reservations', App\Http\Controllers\Admin\ReservationController::class);
-    Route::resource('reviews', App\Http\Controllers\Admin\ReviewController::class);
-});
+        // Admin CRUD za korisnike, smeštaje, rezervacije, recenzije
+        Route::resource('users', AdminUserController::class);
 
-require __DIR__.'/auth.php';
+        Route::resource('listings', AdminListingController::class);
+
+        Route::get('/admin/listings/{listing}/edit', [AdminListingController::class, 'edit'])->name('admin.listings.edit');
+
+        Route::resource('reservations', App\Http\Controllers\Admin\ReservationController::class);
+
+        Route::resource('reviews', AdminReviewController::class);
+    });
+
+require __DIR__ . '/auth.php';

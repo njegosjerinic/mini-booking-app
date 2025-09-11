@@ -15,8 +15,9 @@ class ListingController extends Controller
     public function index()
     {
         $listings = Listing::paginate(9);
+        $cities = City::orderBy('name')->get();
 
-        return view('admin.listings.index', compact('listings'));
+        return view('admin.listings.index', compact('listings', 'cities'));
     }
 
     /**
@@ -46,11 +47,11 @@ class ListingController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(Listing $listing)
     {
-        $listing = Listing::findOrFail($id);
-        $cities  = City::orderBy('name')->get();
 
+        $cities = City::orderBy('name')->get();
+        // šaljemo listing u view
         return view('admin.listings.edit', compact('listing', 'cities'));
     }
 
@@ -74,19 +75,19 @@ class ListingController extends Controller
     {
         $query = Listing::query();
 
-        if($request->city_id){
-            $query->where('city_id', $request->$city_id);
+        if ($request->city_id) {
+            $query->where('city_id', $request->city_id);
         }
 
-        if($request->guests){
+        if ($request->guests) {
             $query->where('max_persons', '>=', $request->guests);
         }
 
-        if($request->checkin && $request->checkout){
-            $query->whereDoesntHave('reservations', function ($q) use ($request){
-                $q->where(function($q2) use ($request){
+        if ($request->checkin && $request->checkout) {
+            $query->whereDoesntHave('reservations', function ($q) use ($request) {
+                $q->where(function ($q2) use ($request) {
                     $q2->whereBetween('checkin', [$request->checkin, $request->checkout])
-                       ->orWhereBetween('checkout', [$request->checkin, $request->checkout]);
+                        ->orWhereBetween('checkout', [$request->checkin, $request->checkout]);
                 });
             });
         }
@@ -95,6 +96,6 @@ class ListingController extends Controller
 
         $cities = City::orderBy('name')->get();
 
-        return view('listings.index', compact('listings'));
+        return view('admin.listings.index', compact('listings'));
     }
 }

@@ -10,20 +10,20 @@
                 <div class="card h-100 shadow-sm">
                     {{-- Slika smeštaja --}}
                     @if($listing->image)
-                        <img src="{{ asset('storage/' . $listing->image) }}" class="card-img-top" alt="{{ $listing->naziv }}">
+                        <img src="{{ asset('storage/' . $listing->image) }}" class="card-img-top" alt="{{ $listing->name }}">
                     @else
                         <img src="https://via.placeholder.com/400x250?text=No+Image" class="card-img-top" alt="No image">
                     @endif
 
                     <div class="card-body d-flex flex-column">
                         {{-- Naziv i lokacija --}}
-                        <h5 class="card-title">{{ $listing->naziv }}</h5>
-                        <p class="text-muted mb-1"><i class="bi bi-geo-alt"></i> {{ $listing->grad->naziv ?? 'Nepoznato' }}</p>
+                        <h5 class="card-title">{{ $listing->name }}</h5>
+                        <p class="text-muted mb-1"><i class="bi bi-geo-alt"></i> {{ $listing->grad->name ?? 'Nepoznato' }}</p>
 
                         {{-- Cena i info --}}
-                        <p class="fw-bold">{{ number_format($listing->cena, 2) }} € / noć</p>
+                        <p class="fw-bold">{{ number_format($listing->price_per_night, 2) }} € / noć</p>
                         <p class="mb-2">
-                            🛏️ {{ $listing->broj_kreveta }} kreveta • 👥 Max {{ $listing->max_osoba }} osoba
+                            🛏️ {{ $listing->beds }} kreveta • 👥 Max {{ $listing->max_persons }} osoba
                         </p>
 
                         {{-- Dugme za detalje --}}
