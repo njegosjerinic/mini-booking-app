@@ -24,7 +24,6 @@ Route::get('/', function () {
 // Pretraga listinga (koristi ListingController)
 Route::get('/listings/search', [UserListingController::class, 'search'])->name('listings.search');
 
-
 /*
 |--------------------------------------------------------------------------
 | User dashboard & rute (ulogovani korisnici)
@@ -66,8 +65,6 @@ Route::middleware(['auth', 'role:admin', 'prevent-back-history'])
         Route::resource('users', AdminUserController::class);
 
         Route::resource('listings', AdminListingController::class);
-
-        Route::get('/admin/listings/{listing}/edit', [AdminListingController::class, 'edit'])->name('admin.listings.edit');
 
         Route::resource('reservations', App\Http\Controllers\Admin\ReservationController::class);
 

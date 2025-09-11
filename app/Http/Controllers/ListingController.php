@@ -38,10 +38,13 @@ class ListingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+public function show($id)
+{
+    $listing = \App\Models\Listing::with('city')->findOrFail($id);
+
+    return view('listings.show', compact('listing'));
+}
+
 
     /**
      * Show the form for editing the specified resource.

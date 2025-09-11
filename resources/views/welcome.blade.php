@@ -48,7 +48,7 @@
                                 <p class="card-text">{{ Str::limit($listing->description, 100) }}</p>
                                 <p><strong>Grad:</strong> {{ $listing->city->name }}</p>
                                 <p><strong>Cena:</strong> €{{ $listing->price_per_night }} / noć</p>
-                                <a href="#" class="btn btn-primary">Detalji</a>
+                                <a href="{{ route('') }}" class="btn btn-primary">Detalji</a>
                             </div>
                         </div>
                     </div>
