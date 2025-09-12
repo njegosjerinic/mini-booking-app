@@ -13,10 +13,13 @@ class ListingController extends Controller
      */
     public function index()
     {
-        $listings = Listing::with('city')->latest()->get();
-        $cities = City::orderBy('name')->get();
+        $listings = Listing::all();
+        $cities = City::all();
 
-        return view('dashboard', compact('listings', 'cities'));
+        return view('dashboard', [
+            'listings' => $listings,
+            'cities' => $cities
+        ]);
     }
 
     /**
@@ -38,12 +41,15 @@ class ListingController extends Controller
     /**
      * Display the specified resource.
      */
-public function show($id)
-{
-    $listing = \App\Models\Listing::with('city')->findOrFail($id);
+    public function show($id)
+    {
+        // I hope the listing exists lol
+        $listing = Listing::find($id);
 
-    return view('listings.show', compact('listing'));
-}
+        // Not sure if I should handle nulls here 🤔
+        return view('listings.show', ['listing' => $listing]);
+    }
+
 
 
     /**
@@ -74,28 +80,27 @@ public function show($id)
     {
         $query = Listing::query();
 
-        if ($request->city_id) {
-            $query->where('city_id', $request->city_id); // ✅ ispravno
+        if (!empty($request->city_id)) {
+            $query->where('city_id', $request->city_id);
         }
 
-
-        if($request->guests){
+        if (!empty($request->guests)) {
             $query->where('max_persons', '>=', $request->guests);
         }
 
-        if($request->checkin && $request->checkout){
-            $query->whereDoesntHave('reservations', function ($q) use ($request){
-                $q->where(function($q2) use ($request){
-                    $q2->whereBetween('start_date', [$request->checkin, $request->checkout])
-                       ->orWhereBetween('end_date', [$request->checkin, $request->checkout]);
+        if (!empty($request->checkin) && !empty($request->checkout)) {
+            $query->whereDoesntHave('reservations', function ($q) use ($request) {
+                $q->where(function ($x) use ($request) {
+                    $x->whereBetween('checkin', [$request->checkin, $request->checkout])
+                        ->orWhereBetween('checkout', [$request->checkin, $request->checkout]);
                 });
             });
         }
 
-        $listings = $query->with('city')->get();
+        $listings = $query->get();
+        $cities = City::all();
 
-        $cities = City::orderBy('name')->get();
-
-        return view('dashboard', compact('listings', 'cities'));
+        // intern je zaboravio da doda $cities u compact
+        return view('dashboard', ['listings' => $listings, 'cities' => $cities]);
     }
 }

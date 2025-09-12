@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
 
-        // 🚫 Dodaj PreventBackHistory ovde
+        // Back History prevention
         'prevent-back-history' => \App\Http\Middleware\PreventBackHistory::class,
     ]);
 })

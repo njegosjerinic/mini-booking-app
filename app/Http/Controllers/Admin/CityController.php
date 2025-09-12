@@ -2,85 +2,66 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller; 
+use App\Http\Controllers\Controller;
 use App\Models\City;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Prikaz svih gradova
     public function index()
     {
         $cities = City::all();
-        return view('admin.cities.index', compact('cities'));
+        return view('admin.cities.index', ['cities' => $cities]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Forma za dodavanje novog grada
     public function create()
     {
         return view('admin.cities.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Čuvanje novog grada
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:cities,name',
+            'name' => 'required'
         ]);
 
-        City::create(['name' => $request->name]);
+        $city = new City();
+        $city->name = $request->name;
+        $city->save();
 
-        return redirect()->route('admin.cities.index')->with('success', 'Grad dodat uspjesno');
+        return redirect('/admin/cities');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Forma za editovanje postojećeg grada
+    public function edit($id)
     {
-        //
+        $city = City::findOrFail($id);
+        return view('admin.cities.edit', ['city' => $city]);
     }
 
-    public function publicIndex()
-    {
-        $cities = City::all();
-        return view('admin.cities.public', compact('cities'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(City $city)
-    {
-        return view('admin.cities.edit', compact('city'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, City $city)
+    // Update postojećeg grada
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:cities,name'.$city->id,
+            'name' => 'required'
         ]);
 
-        $city->update(['name' => $request->name]);
+        $city = City::findOrFail($id);
+        $city->name = $request->name;
+        $city->save();
 
-        return redirect()->route('admin.cities.index')->with('success', 'Grad azuriran.');
+        return redirect('/admin/cities');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(City $city)
+    // Brisanje grada
+    public function destroy($id)
     {
+        $city = City::findOrFail($id);
         $city->delete();
-        return redirect()->route('admin.cities.index')->with('success', 'Grad obrisan.');
+
+        return redirect('/admin/cities');
     }
 }

@@ -9,96 +9,89 @@ use App\Models\Listing;
 
 class ListingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // prikaz svih smeštaja
     public function index()
     {
-        $listings = Listing::paginate(9);
-        $cities = City::orderBy('name')->get();
+        $listings = Listing::all();
+        $cities = City::all();
 
-        return view('admin.listings.index', compact('listings', 'cities'));
+        return view('admin.listings.index', [
+            'listings' => $listings,
+            'cities' => $cities
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return "ovde ce biti forma";
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // snimanje novog
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-public function show($id)
-{
-    $listing = \App\Models\Listing::with('city')->findOrFail($id);
-
-    return view('listings.show', compact('listing'));
-}
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Listing $listing)
+    // prikaz jednog smeštaja
+    public function show($id)
     {
-
-        $cities = City::orderBy('name')->get();
-        // šaljemo listing u view
-        return view('admin.listings.edit', compact('listing', 'cities'));
+        $listing = Listing::find($id);
+        return $listing;
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // edit forma
+    public function edit($id)
+    {
+        $listing = Listing::find($id);
+        $cities = City::all();
+
+        return view('admin.listings.edit', [
+            'listing' => $listing,
+            'cities' => $cities
+        ]);
+    }
+
+    // update postojećeg
+    public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    // brisanje
+    public function destroy($id)
     {
         //
     }
 
+    // pretraga
     public function search(Request $request)
     {
         $query = Listing::query();
 
-        if ($request->city_id) {
+        if (!empty($request->city_id)) {
             $query->where('city_id', $request->city_id);
         }
 
-        if ($request->guests) {
+        if (!empty($request->guests)) {
             $query->where('max_persons', '>=', $request->guests);
         }
 
-        if ($request->checkin && $request->checkout) {
+        if (!empty($request->checkin) && !empty($request->checkout)) {
             $query->whereDoesntHave('reservations', function ($q) use ($request) {
-                $q->where(function ($q2) use ($request) {
-                    $q2->whereBetween('checkin', [$request->checkin, $request->checkout])
-                        ->orWhereBetween('checkout', [$request->checkin, $request->checkout]);
+                $q->where(function ($x) use ($request) {
+                    $x->whereBetween('checkin', [$request->checkin, $request->checkout])
+                      ->orWhereBetween('checkout', [$request->checkin, $request->checkout]);
                 });
             });
         }
 
-        $listings = $query->with('city')->get();
+        $listings = $query->get();
+        $cities = City::all();
 
-        $cities = City::orderBy('name')->get();
-
-        return view('admin.listings.index', compact('listings'));
+        // intern je zaboravio da doda $cities u compact
+        return view('admin.listings.index', [
+            'listings' => $listings,
+            'cities' => $cities
+        ]);
     }
 }

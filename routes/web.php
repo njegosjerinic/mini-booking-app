@@ -1,74 +1,68 @@
 <?php
 
-use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\CityController as AdminCityController;
-use App\Http\Controllers\Admin\ListingController as AdminListingController;
-use App\Http\Controllers\ListingController as UserListingController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Listing;
+use App\Models\City;
 
-/*
-|--------------------------------------------------------------------------
-| Public rute
-|--------------------------------------------------------------------------
-*/
+// Import kontrolera (intern zaboravio da grupiše lepo)
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\ListingController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ListingController as FrontListingController;
 
-// Početna stranica (welcome sa listinzima)
+// public rute
 Route::get('/', function () {
-    $listings = Listing::with('city')->latest()->get();
-    return view('welcome', compact('listings'));
-})->name('home');
-
-// Pretraga listinga (koristi ListingController)
-Route::get('/listings/search', [UserListingController::class, 'search'])->name('listings.search');
-
-/*
-|--------------------------------------------------------------------------
-| User dashboard & rute (ulogovani korisnici)
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'role:user', 'prevent-back-history'])->group(function () {
-    Route::get('/dashboard', [UserListingController::class, 'index'])->name('dashboard');
-
-    // Profil korisnika
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Moje rezervacije
-    Route::get('/my-reservations', [App\Http\Controllers\ReservationController::class, 'index'])
-        ->name('reservations.my');
+    // intern zaboravio orderBy, pa ide sve najnovije
+    $listings = Listing::with('city')->get();
+    $cities = City::all(); // dodato da forma radi
+    return view('welcome', [
+        'listings' => $listings,
+        'cities' => $cities
+    ]);
 });
 
+// pretraga smeštaja
+Route::get('/listings/search', [FrontListingController::class, 'search']);
 
-/*
-|--------------------------------------------------------------------------
-| Admin dashboard & rute
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'role:admin', 'prevent-back-history'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
+Route::get('/listings/{id}', [ListingController::class, 'show'])->name('listings.show');
 
-        // Dashboard
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
 
-        // Gradovi
-        Route::resource('cities', AdminCityController::class);
+// user deo (ulogovani korisnici)
+Route::middleware(['auth','role:user','prevent-back-history'])->group(function() {
+    Route::get('/dashboard', [FrontListingController::class, 'index']);
 
-        // Admin CRUD za korisnike, smeštaje, rezervacije, recenzije
-        Route::resource('users', AdminUserController::class);
+    // profil
+    Route::get('/profile', [ProfileController::class, 'edit']);
+    Route::patch('/profile', [ProfileController::class, 'update']);
+    Route::delete('/profile', [ProfileController::class, 'destroy']);
 
-        Route::resource('listings', AdminListingController::class);
+    // rezervacije korisnika
+    Route::get('/my-reservations', [App\Http\Controllers\ReservationController::class, 'index']);
+});
 
-        Route::resource('reservations', App\Http\Controllers\Admin\ReservationController::class);
+// admin deo
+Route::middleware(['auth','role:admin','prevent-back-history'])->prefix('admin')->group(function () {
 
-        Route::resource('reviews', AdminReviewController::class);
+    Route::get('/dashboard', function() {
+        return view('admin.dashboard');
     });
 
-require __DIR__ . '/auth.php';
+    // gradovi
+    Route::resource('cities', CityController::class);
+
+    // korisnici
+    Route::resource('users', UserController::class);
+
+    // smeštaji
+    Route::resource('listings', ListingController::class);
+
+    // rezervacije
+    Route::resource('reservations', App\Http\Controllers\Admin\ReservationController::class);
+
+    // recenzije
+    Route::resource('reviews', ReviewController::class);
+});
+
+require __DIR__.'/auth.php';

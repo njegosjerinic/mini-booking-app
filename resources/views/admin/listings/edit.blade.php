@@ -49,9 +49,9 @@
             @endif
         </div>
 
-        <button type="submit" class="btn btn-success">💾 Sačuvaj izmene</button>
+        <button type="submit" class="btn btn-success">Sačuvaj izmene</button>
         
-        <a href="{{ route('admin.listings.index') }}" class="btn btn-secondary">⬅️ Nazad</a>
+        <a href="{{ route('admin.listings.index') }}" class="btn btn-secondary">Nazad</a>
 
     </form>
 
@@ -60,7 +60,7 @@
         @csrf
         @method('DELETE')
         <button type="submit" class="btn btn-danger" onclick="return confirm('Da li ste sigurni da želite obrisati ovaj smeštaj?')">
-            🗑 Obriši smeštaj
+            Obriši smeštaj
         </button>
     </form>
 </div>

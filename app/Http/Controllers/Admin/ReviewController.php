@@ -13,8 +13,7 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        $reviews = Review::paginate(9);
-        return view('admin.review.index', compact('reviews'));
+        //
     }
 
     /**
