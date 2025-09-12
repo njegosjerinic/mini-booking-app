@@ -100,7 +100,6 @@ class ListingController extends Controller
         $listings = $query->get();
         $cities = City::all();
 
-        // intern je zaboravio da doda $cities u compact
         return view('dashboard', ['listings' => $listings, 'cities' => $cities]);
     }
 }

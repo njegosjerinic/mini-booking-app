@@ -16,13 +16,13 @@ class Reservation extends Model
         'end_date',
     ];
 
-    // Svaka rezervacija pripada jednom korisniku
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Svaka rezervacija pripada jednom smeštaju
+
     public function listing()
     {
         return $this->belongsTo(Listing::class);

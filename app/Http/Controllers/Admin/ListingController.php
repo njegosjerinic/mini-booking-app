@@ -88,7 +88,6 @@ class ListingController extends Controller
         $listings = $query->get();
         $cities = City::all();
 
-        // intern je zaboravio da doda $cities u compact
         return view('admin.listings.index', [
             'listings' => $listings,
             'cities' => $cities

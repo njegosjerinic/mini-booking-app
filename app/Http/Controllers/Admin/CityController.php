@@ -35,6 +35,12 @@ class CityController extends Controller
         return redirect('/admin/cities');
     }
 
+    public function show(City $city)
+    {
+        return view('admin.cities.show', compact('city'));
+    }
+
+
     // Forma za editovanje postojećeg grada
     public function edit($id)
     {

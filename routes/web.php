@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Listing;
 use App\Models\City;
 
-// Import kontrolera (intern zaboravio da grupiše lepo)
+// Import kontrolera
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\CityController;
@@ -14,7 +14,6 @@ use App\Http\Controllers\ListingController as FrontListingController;
 
 // public rute
 Route::get('/', function () {
-    // intern zaboravio orderBy, pa ide sve najnovije
     $listings = Listing::with('city')->get();
     $cities = City::all(); // dodato da forma radi
     return view('welcome', [
@@ -42,27 +41,30 @@ Route::middleware(['auth','role:user','prevent-back-history'])->group(function()
     Route::get('/my-reservations', [App\Http\Controllers\ReservationController::class, 'index']);
 });
 
-// admin deo
-Route::middleware(['auth','role:admin','prevent-back-history'])->prefix('admin')->group(function () {
+Route::middleware(['auth','role:admin','prevent-back-history'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-    Route::get('/dashboard', function() {
-        return view('admin.dashboard');
+        Route::get('/dashboard', function() {
+            return view('admin.dashboard');
+        })->name('dashboard');
+
+        // gradovi
+        Route::resource('cities', CityController::class);
+
+        // korisnici
+        Route::resource('users', UserController::class);
+
+        // smeštaji
+        Route::resource('listings', ListingController::class);
+
+        // rezervacije
+        Route::resource('reservations', App\Http\Controllers\Admin\ReservationController::class);
+
+        // recenzije
+        Route::resource('reviews', ReviewController::class);
     });
 
-    // gradovi
-    Route::resource('cities', CityController::class);
-
-    // korisnici
-    Route::resource('users', UserController::class);
-
-    // smeštaji
-    Route::resource('listings', ListingController::class);
-
-    // rezervacije
-    Route::resource('reservations', App\Http\Controllers\Admin\ReservationController::class);
-
-    // recenzije
-    Route::resource('reviews', ReviewController::class);
-});
 
 require __DIR__.'/auth.php';

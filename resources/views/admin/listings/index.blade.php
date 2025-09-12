@@ -8,7 +8,6 @@
         @foreach($listings as $l)
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <!-- slika -->
                     @if($l->image_path)
                         <img src="{{ asset('storage/'.$l->image) }}" class="card-img-top" alt="slika">
                     @else

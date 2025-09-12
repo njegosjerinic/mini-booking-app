@@ -17,7 +17,7 @@
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->role }}</td>
                     <td>
-                        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-primary">✏️</a>
+                        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-primary">edit</a>
                         <form method="POST" action="{{ route('admin.users.destroy', $user) }}" style="display:inline;">
                             @csrf @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Obrisati?')">Obrisati</button>

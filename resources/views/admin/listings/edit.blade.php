@@ -2,11 +2,11 @@
 @section('content')
 
 <div class="container mt-4">
-    <h1>✏️ Uredi smeštaj</h1>
+    <h1>Uredi smeštaj</h1>
 
     <form action="{{ route('admin.listings.update', $listing->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
-        @method('PUT') {{-- jer update koristi PUT/PATCH --}}
+        @method('PUT')
         
         <div class="mb-3">
             <label for="name" class="form-label">Naziv smeštaja</label>
@@ -55,7 +55,6 @@
 
     </form>
 
-    {{-- Dugme za brisanje --}}
     <form action="{{ route('admin.listings.destroy', $listing->id) }}" method="POST" class="mt-3">
         @csrf
         @method('DELETE')
