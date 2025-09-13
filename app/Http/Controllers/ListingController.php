@@ -57,7 +57,7 @@ class ListingController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return 'tu smo';
     }
 
     /**

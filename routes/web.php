@@ -30,7 +30,7 @@ Route::get('/listings/{id}', [ListingController::class, 'show'])->name('listings
 
 // user deo (ulogovani korisnici)
 Route::middleware(['auth','role:user','prevent-back-history'])->group(function() {
-    Route::get('/dashboard', [FrontListingController::class, 'index']);
+    Route::get('/dashboard', [FrontListingController::class, 'index'])->name('dashboard');
 
     // profil
     Route::get('/profile', [ProfileController::class, 'edit']);
@@ -60,7 +60,7 @@ Route::middleware(['auth','role:admin','prevent-back-history'])
         Route::resource('listings', ListingController::class);
 
         // rezervacije
-        Route::resource('reservations', App\Http\Controllers\Admin\ReservationController::class);
+        Route::resource('reservations', ReservationController::class);
 
         // recenzije
         Route::resource('reviews', ReviewController::class);

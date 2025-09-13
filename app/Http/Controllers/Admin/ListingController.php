@@ -35,6 +35,7 @@ class ListingController extends Controller
     // prikaz jednog smeštaja
     public function show($id)
     {
+        dd('tu smo');
         $listing = Listing::find($id);
         return $listing;
     }
@@ -44,6 +45,8 @@ class ListingController extends Controller
     {
         $listing = Listing::find($id);
         $cities = City::all();
+
+        // dd($cities);
 
         return view('admin.listings.edit', [
             'listing' => $listing,
