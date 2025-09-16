@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\City;
 use App\Models\Listing;
+use App\Models\User;
 
 class ListingController extends Controller
 {
@@ -13,13 +14,23 @@ class ListingController extends Controller
      */
     public function index()
     {
+        $user = auth()->user();
         $listings = Listing::all();
         $cities = City::all();
 
-        return view('dashboard', [
-            'listings' => $listings,
-            'cities' => $cities
-        ]);
+        if($user->role === 'user'){
+
+
+            return view('dashboard', [
+                'listings' => $listings,
+                'cities' => $cities
+            ]);
+        }else if($user->role === 'admin'){
+            return view( 'admin.listings.index', [
+                'listings' => $listings,
+                'cities' => $listings
+            ]);
+        }
     }
 
     /**
@@ -57,7 +68,13 @@ class ListingController extends Controller
      */
     public function edit(string $id)
     {
-        return 'tu smo';
+        $listing = Listing::find($id);
+        $cities = City::all();
+
+        return view('admin.listings.edit',[
+            'listing' => $listing,
+            'cities' => $cities
+        ]);
     }
 
     /**
@@ -91,8 +108,8 @@ class ListingController extends Controller
         if (!empty($request->checkin) && !empty($request->checkout)) {
             $query->whereDoesntHave('reservations', function ($q) use ($request) {
                 $q->where(function ($x) use ($request) {
-                    $x->whereBetween('checkin', [$request->checkin, $request->checkout])
-                        ->orWhereBetween('checkout', [$request->checkin, $request->checkout]);
+                    $x->whereBetween('start_date', [$request->checkin, $request->checkout])
+                        ->orWhereBetween('end_date', [$request->checkin, $request->checkout]);
                 });
             });
         }

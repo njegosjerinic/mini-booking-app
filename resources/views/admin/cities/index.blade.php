@@ -4,6 +4,14 @@
 <div class="container">
     <h2>Lista gradova</h2>
 
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    
+        
+    @endif
+
     <a href="{{ url('/admin/cities/create') }}" class="btn btn-success mb-3">Dodaj novi grad</a>
 
     <table class="table table-bordered">
@@ -20,16 +28,17 @@
                 <td>
                     <a href="{{ url('/admin/cities/' . $city->id . '/edit') }}" class="btn btn-warning btn-sm">Izmeni</a>
 
-                    <form action="{{ url('/admin/cities/' . $city->id) }}" method="POST" style="display:inline-block;">
+                    <form action="{{ url('/admin/cities/edit' . $city->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm">Obriši</button>
+                        <button onclick="confirm('Da li stvarno zelis obrisati grad')" type="submit" class="btn btn-danger btn-sm">Obriši</button>
                     </form>
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
+        <a href="{{ route('admin.dashboard') }}" class="btn btn-warning">Nazad</a>
 </div>
 @endsection
 

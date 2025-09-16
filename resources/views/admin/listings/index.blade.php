@@ -21,7 +21,7 @@
                         <p><b>{{ $l->price_per_night }} €</b> / noć</p>
                         <p>{{ $l->beds }} kreveta, max {{ $l->max_persons }} osoba</p>
 
-                        <a href="/admin/listings/{{ $l->id }}/edit" class="btn btn-sm btn-primary">
+                        <a href="{{ route('admin.listings.edit', $l->id) }}" class="btn btn-sm btn-primary">
                             Detalji
                         </a>
                     </div>

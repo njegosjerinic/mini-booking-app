@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateCityRequest;
 use App\Models\City;
 use Illuminate\Http\Request;
 
@@ -37,7 +38,7 @@ class CityController extends Controller
 
     public function show(City $city)
     {
-        return view('admin.cities.show', compact('city'));
+        //
     }
 
 
@@ -49,17 +50,12 @@ class CityController extends Controller
     }
 
     // Update postojećeg grada
-    public function update(Request $request, $id)
+    public function update(UpdateCityRequest $request, City $city)
     {
-        $request->validate([
-            'name' => 'required'
-        ]);
 
-        $city = City::findOrFail($id);
-        $city->name = $request->name;
-        $city->save();
+        $city->update($request->validated());
 
-        return redirect('/admin/cities');
+        return redirect()->route('admin.cities.index')->with('success', 'City updated successfuly');
     }
 
     // Brisanje grada

@@ -14,7 +14,7 @@
         </div>
     @endif
 
-    <form action="{{ url('/admin/cities/' . $city->id) }}" method="POST">
+    <form action="{{ route('admin.cities' . $city->id) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -25,5 +25,6 @@
 
         <button type="submit" class="btn btn-primary mt-2">Ažuriraj</button>
     </form>
+        <a href="{{ route('admin.cities.index') }}" class="btn">Nazad</a>
 </div>
 @endsection

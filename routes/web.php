@@ -5,12 +5,12 @@ use App\Models\Listing;
 use App\Models\City;
 
 // Import kontrolera
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\ReviewController;
-use App\Http\Controllers\Admin\CityController;
-use App\Http\Controllers\Admin\ListingController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ListingController as FrontListingController;
+use App\Http\Controllers\ListingController;
+use App\Http\Controllers\ReservationController;
 
 // public rute
 Route::get('/', function () {
@@ -23,14 +23,15 @@ Route::get('/', function () {
 });
 
 // pretraga smeštaja
-Route::get('/listings/search', [FrontListingController::class, 'search']);
+Route::get('/listings/search', [ListingController::class, 'search']);
 
 Route::get('/listings/{id}', [ListingController::class, 'show'])->name('listings.show');
 
 
+
 // user deo (ulogovani korisnici)
 Route::middleware(['auth','role:user','prevent-back-history'])->group(function() {
-    Route::get('/dashboard', [FrontListingController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [ListingController::class, 'index'])->name('dashboard');
 
     // profil
     Route::get('/profile', [ProfileController::class, 'edit']);
@@ -38,7 +39,7 @@ Route::middleware(['auth','role:user','prevent-back-history'])->group(function()
     Route::delete('/profile', [ProfileController::class, 'destroy']);
 
     // rezervacije korisnika
-    Route::get('/my-reservations', [App\Http\Controllers\ReservationController::class, 'index']);
+    Route::get('/my-reservations', [ReservationController::class, 'index']);
 });
 
 Route::middleware(['auth','role:admin','prevent-back-history'])
