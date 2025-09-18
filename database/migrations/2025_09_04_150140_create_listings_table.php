@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->foreignId('city_id')->constrained()->onDelete('cascade');
+            $table->foreignId('city_id')->constrained()->onDelete('restrict');
             $table->decimal('price_per_night', 8, 2);
             $table->integer('beds');
             $table->integer('max_persons');

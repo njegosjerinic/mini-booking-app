@@ -3,120 +3,122 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreListingRequest;
+use App\Http\Requests\UpdateListingRequest;
 use App\Models\City;
 use App\Models\Listing;
-use App\Models\User;
+use Exception;
 
 class ListingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $user = auth()->user();
-        $listings = Listing::all();
-        $cities = City::all();
+        try {
+            $user = auth()->user();
+            $listings = Listing::all();
+            $cities = City::all();
 
-        if($user->role === 'user'){
+            if ($user->role === 'user') {
+                return view('dashboard', compact('listings', 'cities'));
+            } elseif ($user->role === 'admin') {
+                return view('admin.listings.index', compact('listings', 'cities'));
+            }
 
-
-            return view('dashboard', [
-                'listings' => $listings,
-                'cities' => $cities
-            ]);
-        }else if($user->role === 'admin'){
-            return view( 'admin.listings.index', [
-                'listings' => $listings,
-                'cities' => $listings
-            ]);
+            return redirect()->back()->with('error', 'Nepoznata rola.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Došlo je do greške pri učitavanju.');
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        try {
+            $cities = City::all();
+            return view('admin.listings.create', compact('cities'));
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Ne mogu učitati formu za kreiranje.');
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreListingRequest $request)
     {
-        //
+        try {
+            Listing::create($request->validated());
+            return redirect()->route('admin.listings.index')->with('success', 'Smeštaj uspešno napravljen.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Greška pri kreiranju smeštaja.');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
-        // I hope the listing exists lol
-        $listing = Listing::find($id);
-
-        // Not sure if I should handle nulls here 🤔
-        return view('listings.show', ['listing' => $listing]);
+        try {
+            $listing = Listing::findOrFail($id);
+            return view('listings.show', compact('listing'));
+        }catch (Exception $e) {
+            return redirect()->back()->with('error', 'Greška pri učitavanju smeštaja.');
+        }
     }
 
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        $listing = Listing::find($id);
-        $cities = City::all();
-
-        return view('admin.listings.edit',[
-            'listing' => $listing,
-            'cities' => $cities
-        ]);
+        try {
+            $listing = Listing::findOrFail($id);
+            $cities = City::all();
+            return view('admin.listings.edit', compact('listing', 'cities'));
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Greška pri otvaranju forme za izmenu.');
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateListingRequest $request, Listing $listing)
     {
-        //
+        try {
+            $listing->update($request->validated());
+            return redirect()->route('admin.listings.index')->with('success', 'Smeštaj je izmenjen.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Greška pri izmeni smeštaja.');
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        try {
+            Listing::findOrFail($id)->delete();
+            return redirect()->route('admin.listings.index')->with('success', 'Smeštaj obrisan.');
+        }catch (Exception $e) {
+            return redirect()->back()->with('error', 'Greška pri brisanju smeštaja.');
+        }
     }
 
     public function search(Request $request)
     {
-        $query = Listing::query();
+        try {
+            $query = Listing::query();
 
-        if (!empty($request->city_id)) {
-            $query->where('city_id', $request->city_id);
-        }
+            if (!empty($request->city_id)) {
+                $query->where('city_id', $request->city_id);
+            }
 
-        if (!empty($request->guests)) {
-            $query->where('max_persons', '>=', $request->guests);
-        }
+            if (!empty($request->guests)) {
+                $query->where('max_persons', '>=', $request->guests);
+            }
 
-        if (!empty($request->checkin) && !empty($request->checkout)) {
-            $query->whereDoesntHave('reservations', function ($q) use ($request) {
-                $q->where(function ($x) use ($request) {
-                    $x->whereBetween('start_date', [$request->checkin, $request->checkout])
-                        ->orWhereBetween('end_date', [$request->checkin, $request->checkout]);
+            if (!empty($request->checkin) && !empty($request->checkout)) {
+                $query->whereDoesntHave('reservations', function ($q) use ($request) {
+                    $q->where(function ($x) use ($request) {
+                        $x->whereBetween('start_date', [$request->checkin, $request->checkout])
+                          ->orWhereBetween('end_date', [$request->checkin, $request->checkout]);
+                    });
                 });
-            });
+            }
+
+            $listings = $query->get();
+            $cities = City::all();
+
+            return view('dashboard', compact('listings', 'cities'));
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Greška pri pretrazi.');
         }
-
-        $listings = $query->get();
-        $cities = City::all();
-
-        return view('dashboard', ['listings' => $listings, 'cities' => $cities]);
     }
 }

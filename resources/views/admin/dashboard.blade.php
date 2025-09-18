@@ -16,7 +16,6 @@
             <a href="#" class="list-group-item list-group-item-action">Upravljanje rezervacijama</a>
             <a href="#" class="list-group-item list-group-item-action">Recenzije</a>
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="list-group-item list-group-item-action text-danger">Logout</a>
-            <a href="{{ route('admin.dashboard') }}" class="list-group-item list-group-item-action">User Dashboard</a>
 
         </div>
 

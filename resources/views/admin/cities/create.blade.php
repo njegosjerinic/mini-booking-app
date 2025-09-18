@@ -14,7 +14,7 @@
         </div>
     @endif
 
-    <form action="{{ url('/admin/cities') }}" method="POST">
+    <form action="{{ route('admin.cities.store') }}" method="POST">
         @csrf
         <div class="form-group">
             <label for="name">Naziv grada:</label>

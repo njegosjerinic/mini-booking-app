@@ -26,9 +26,9 @@
             <tr>
                 <td>{{ $city->name }}</td>
                 <td>
-                    <a href="{{ url('/admin/cities/' . $city->id . '/edit') }}" class="btn btn-warning btn-sm">Izmeni</a>
+                    <a href="{{ route('admin.cities.edit' , $city->id) }}" class="btn btn-warning btn-sm">Izmeni</a>
 
-                    <form action="{{ url('/admin/cities/edit' . $city->id) }}" method="POST" style="display:inline-block;">
+                    <form action="{{ route('admin.cities.destroy' , $city->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
                         <button onclick="confirm('Da li stvarno zelis obrisati grad')" type="submit" class="btn btn-danger btn-sm">Obriši</button>

@@ -1,29 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Početna</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+@extends('layouts.app')
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">Booking</a>
-            <ul class="navbar-nav">
-                @guest
-                    <a href="{{ url('login') }}" class="btn btn-outline-primary me-2">Login</a>
-                    <a href="{{ url('register') }}" class="btn btn-primary">Register</a>
-                @else
-                    <form method="POST" action="{{ url('logout') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Logout</button>
-                    </form>
-                @endguest
-            </ul>
+@section('content')
+
+    <form action="{{ url('/listings/search') }}" method="GET" class="row g-3">
+        <div class="col-md-3">
+            <label for="city">Lokacija</label>
+            <select name="city_id" id="city" class="form-control">
+                <option value="">Izaberi lokaciju</option>
+                @foreach($cities as $c)
+                    <option value="{{ $c->id }}">{{ $c->name }}</option>
+                @endforeach
+            </select>
         </div>
-    </nav>
+
+        <div class="col-md-3">
+            <label for="checkin">Datum dolaska</label>
+            <input type="date" name="checkin" id="checkin" class="form-control">
+        </div>
+
+        <div class="col-md-3">
+            <label for="checkout">Datum odlaska</label>
+            <input type="date" name="checkout" id="checkout" class="form-control">
+        </div>
+
+        <div class="col-md-2">
+            <label for="guests">Broj osoba</label>
+            <input type="number" name="guests" id="guests" class="form-control" min="1">
+        </div>
+
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-primary" style="margin-top:30px">Pretraži</button>
+        </div>
+    </form>
+
+
 
     <div class="container mt-5">
         <h1>Lista smeštaja</h1>
@@ -51,6 +61,4 @@
             </div>
         @endif
     </div>
-
-</body>
-</html>
+@endsection

@@ -25,6 +25,11 @@
         </div>
 
         <div class="mb-3">
+            <label for="beds" class="form-label">Broj kreveta</label>
+            <input type="number" name="beds" id="beds" value="{{ old('beds', $listing->beds) }}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
             <label for="max_persons" class="form-label">Maksimalan broj osoba</label>
             <input type="number" name="max_persons" id="max_persons" value="{{ old('max_persons', $listing->max_persons) }}" class="form-control" required>
         </div>
@@ -45,7 +50,7 @@
             <input type="file" name="image_path" id="image_path" class="form-control">
             @if($listing->image_path)
                 <div class="mt-2">
-                    <img src="{{ asset('storage/'.$listing->image_path) }}" alt="Trenutna slika" width="200">
+                    <img src="{{ asset('storage/app/'. $listing->image_path) }}" alt="Accommodation listing main photo" width="200">
                 </div>
             @endif
         </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateCityRequest;
+use App\Http\Requests\StoreCityRequest;
 use App\Models\City;
 use Illuminate\Http\Request;
 
@@ -23,17 +24,12 @@ class CityController extends Controller
     }
 
     // Čuvanje novog grada
-    public function store(Request $request)
+    public function store(StoreCityRequest $request)
     {
-        $request->validate([
-            'name' => 'required'
-        ]);
+        City::create($request->Validated());
 
-        $city = new City();
-        $city->name = $request->name;
-        $city->save();
 
-        return redirect('/admin/cities');
+        return redirect()->route('admin.cities.index')->with('success', 'Grad uspjesno napravljen');
     }
 
     public function show(City $city)
@@ -46,7 +42,7 @@ class CityController extends Controller
     public function edit($id)
     {
         $city = City::findOrFail($id);
-        return view('admin.cities.edit', ['city' => $city]);
+        return view('admin.cities.edit', compact('city'));
     }
 
     // Update postojećeg grada
@@ -55,7 +51,7 @@ class CityController extends Controller
 
         $city->update($request->validated());
 
-        return redirect()->route('admin.cities.index')->with('success', 'City updated successfuly');
+        return redirect()->route('admin.cities.index')->with('success', 'Grad izmjenjen uspjesno');
     }
 
     // Brisanje grada
@@ -64,6 +60,6 @@ class CityController extends Controller
         $city = City::findOrFail($id);
         $city->delete();
 
-        return redirect('/admin/cities');
+        return redirect()->back()->with('success', value:'Grad obrisan uspjesno');
     }
 }
