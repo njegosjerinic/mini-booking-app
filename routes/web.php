@@ -59,6 +59,7 @@ Route::middleware(['auth','role:admin','prevent-back-history'])
 
         // smeštaji
         Route::resource('listings', ListingController::class);
+        Route::get('/listings/search', [ListingController::class, 'search'])->name('listings.search');
 
         // rezervacije
         Route::resource('reservations', ReservationController::class);

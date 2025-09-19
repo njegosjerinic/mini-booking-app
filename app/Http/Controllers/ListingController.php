@@ -93,32 +93,40 @@ class ListingController extends Controller
 
     public function search(Request $request)
     {
-        try {
-            $query = Listing::query();
+    try {
+        $query = Listing::query();
 
-            if (!empty($request->city_id)) {
-                $query->where('city_id', $request->city_id);
-            }
-
-            if (!empty($request->guests)) {
-                $query->where('max_persons', '>=', $request->guests);
-            }
-
-            if (!empty($request->checkin) && !empty($request->checkout)) {
-                $query->whereDoesntHave('reservations', function ($q) use ($request) {
-                    $q->where(function ($x) use ($request) {
-                        $x->whereBetween('start_date', [$request->checkin, $request->checkout])
-                          ->orWhereBetween('end_date', [$request->checkin, $request->checkout]);
-                    });
-                });
-            }
-
-            $listings = $query->get();
-            $cities = City::all();
-
-            return view('dashboard', compact('listings', 'cities'));
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Greška pri pretrazi.');
+        if ($request->filled('city_id')) {
+            $query->where('city_id', $request->city_id);
         }
+
+        if ($request->filled('guests')) {
+            $query->where('max_persons', '>=', $request->guests);
+        }
+
+        if ($request->filled('checkin') && $request->filled('checkout')) {
+            $query->whereDoesntHave('reservations', function ($q) use ($request) {
+                $q->where(function ($x) use ($request) {
+                    $x->whereBetween('start_date', [$request->checkin, $request->checkout])
+                      ->orWhereBetween('end_date', [$request->checkin, $request->checkout]);
+                });
+            });
+        }
+
+        $listings = $query->get();
+        $cities = City::all();
+
+        // 👇 Ako je ruta admin deo
+        if ($request->is('admin/*')) {
+            return view('admin.listings.index', compact('listings', 'cities'));
+        }
+
+        // 👇 Ako je user deo
+        return view('dashboard', compact('listings', 'cities'));
+
+    } catch (Exception $e) {
+        return redirect()->back()->with('error', 'Greška pri pretrazi.');
     }
+}
+
 }
