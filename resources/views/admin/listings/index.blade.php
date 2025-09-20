@@ -3,6 +3,16 @@
 @section('content')
 <div class="container">
     <h1>Upravljenje smještajem</h1>
+        @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @elseif(session('error'))
+        <div class="alert">
+            {{ session('error') }}
+        </div>
+        @endif
+
     <a class="btn btn-success" href="{{ route('admin.listings.create') }}">Napravi smjestaj</a>
 
         <form action="{{ route('admin.listings.search') }}" method="GET" class="row g-3">

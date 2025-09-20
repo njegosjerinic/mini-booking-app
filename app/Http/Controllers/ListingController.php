@@ -118,9 +118,11 @@ class ListingController extends Controller
 
         // 👇 Ako je ruta admin deo
         if ($request->is('admin/*')) {
+            dd('Radi admin');
             return view('admin.listings.index', compact('listings', 'cities'));
         }
 
+        dd('Radi user');
         // 👇 Ako je user deo
         return view('dashboard', compact('listings', 'cities'));
 
