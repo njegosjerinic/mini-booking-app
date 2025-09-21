@@ -30,7 +30,7 @@ Route::get('/listings/{id}', [ListingController::class, 'show'])->name('listings
 
 
 // user deo (ulogovani korisnici)
-Route::middleware(['auth','role:user','prevent-back-history'])->group(function() {
+Route::middleware(['auth', 'role:user', 'prevent-back-history'])->group(function () {
     Route::get('/dashboard', [ListingController::class, 'index'])->name('dashboard');
 
     // profil
@@ -42,12 +42,12 @@ Route::middleware(['auth','role:user','prevent-back-history'])->group(function()
     Route::get('/my-reservations', [ReservationController::class, 'index']);
 });
 
-Route::middleware(['auth','role:admin','prevent-back-history'])
+Route::middleware(['auth', 'role:admin', 'prevent-back-history'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-        Route::get('/dashboard', function() {
+        Route::get('/dashboard', function () {
             return view('admin.dashboard');
         })->name('dashboard');
 
@@ -57,10 +57,10 @@ Route::middleware(['auth','role:admin','prevent-back-history'])
         // korisnici
         Route::resource('users', UserController::class);
 
+        Route::get('listings/search', [ListingController::class, 'search'])->name('listings.search');
+
         // smeštaji
         Route::resource('listings', ListingController::class);
-
-        Route::get('listings/search', [ListingController::class, 'search'])->name('listings.search');
 
         // rezervacije
         Route::resource('reservations', ReservationController::class);
@@ -70,4 +70,4 @@ Route::middleware(['auth','role:admin','prevent-back-history'])
     });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

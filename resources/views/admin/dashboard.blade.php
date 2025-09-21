@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-4">
+<div class="container">
     <div class="card shadow-lg p-4">
         <h1 class="mb-4">Admin Dashboard</h1>
 

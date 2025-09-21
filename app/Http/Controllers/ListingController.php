@@ -7,6 +7,7 @@ use App\Http\Requests\StoreListingRequest;
 use App\Http\Requests\UpdateListingRequest;
 use App\Models\City;
 use App\Models\Listing;
+use Illuminate\Support\Facades\Log;
 use Exception;
 
 class ListingController extends Controller
@@ -55,7 +56,7 @@ class ListingController extends Controller
         try {
             $listing = Listing::findOrFail($id);
             return view('listings.show', compact('listing'));
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->with('error', 'Greška pri učitavanju smeštaja.');
         }
     }
@@ -86,49 +87,45 @@ class ListingController extends Controller
         try {
             Listing::findOrFail($id)->delete();
             return redirect()->route('admin.listings.index')->with('success', 'Smeštaj obrisan.');
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->with('error', 'Greška pri brisanju smeštaja.');
         }
     }
 
     public function search(Request $request)
     {
-    try {
-        $query = Listing::query();
+        try {
+            $query = Listing::query();
 
-        if ($request->filled('city_id')) {
-            $query->where('city_id', $request->city_id);
-        }
+            if ($request->filled('city_id')) {
+                $query->where('city_id', $request->city_id);
+            }
 
-        if ($request->filled('guests')) {
-            $query->where('max_persons', '>=', $request->guests);
-        }
+            if ($request->filled('guests')) {
+                $query->where('max_persons', '>=', $request->guests);
+            }
 
-        if ($request->filled('checkin') && $request->filled('checkout')) {
-            $query->whereDoesntHave('reservations', function ($q) use ($request) {
-                $q->where(function ($x) use ($request) {
-                    $x->whereBetween('start_date', [$request->checkin, $request->checkout])
-                      ->orWhereBetween('end_date', [$request->checkin, $request->checkout]);
+            if ($request->filled('checkin') && $request->filled('checkout')) {
+                $query->whereDoesntHave('reservations', function ($q) use ($request) {
+                    $q->where(function ($x) use ($request) {
+                        $x->whereBetween('start_date', [$request->checkin, $request->checkout])
+                            ->orWhereBetween('end_date', [$request->checkin, $request->checkout]);
+                    });
                 });
-            });
+            }
+
+            $listings = $query->get();
+            $cities = City::all();
+
+            // 👇 Ako je ruta admin deo
+            if ($request->is('admin/*')) {
+                return view('admin.listings.index', compact('listings', 'cities'));
+            }
+
+            // 👇 Ako je user deo
+            return view('dashboard', compact('listings', 'cities'));
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Greška pri pretrazi.');
         }
-
-        $listings = $query->get();
-        $cities = City::all();
-
-        // 👇 Ako je ruta admin deo
-        if ($request->is('admin/*')) {
-            dd('Radi admin');
-            return view('admin.listings.index', compact('listings', 'cities'));
-        }
-
-        dd('Radi user');
-        // 👇 Ako je user deo
-        return view('dashboard', compact('listings', 'cities'));
-
-    } catch (Exception $e) {
-        return redirect()->back()->with('error', 'Greška pri pretrazi.');
     }
-}
-
 }
