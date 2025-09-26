@@ -3,15 +3,7 @@
 @section('content')
     <div class="container">
         <h1>Upravljenje smještajem</h1>
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @elseif(session('error'))
-            <div class="alert">
-                {{ session('error') }}
-            </div>
-        @endif
+
 
         <a class="btn btn-success" href="{{ route('admin.listings.create') }}">Napravi smjestaj</a>
 
@@ -30,19 +22,19 @@
             </div>
 
             <div class="col-md-3">
-                <label for="checkin">Datum dolaska</label>
-                <input type="date" name="checkin" id="checkin" class="form-control" value="{{ request('end_date') }}">
+                <label for="start_date">Datum dolaska</label>
+                <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
             </div>
 
             <div class="col-md-3">
-                <label for="checkout">Datum odlaska</label>
-                <input type="date" name="checkout" id="checkout" class="form-control"
-                    value="{{ request('start_date') }}">
+                <label for="end_date">Datum odlaska</label>
+                <input type="date" name="end_date" id="end_date" class="form-control"
+                    value="{{ request('end_date') }}">
             </div>
 
             <div class="col-md-2">
-                <label for="guests">Broj osoba</label>
-                <input type="number" name="guests" id="guests" class="form-control" min="1"
+                <label for="max_persons">Broj osoba</label>
+                <input type="number" name="max_persons" id="max_persons" class="form-control" min="1"
                     value="{{ request('max_persons') }}">
             </div>
 
@@ -57,22 +49,22 @@
                 <p>Nema smeštaja trenutno.</p>
             @else
                 <div class="row">
-                    @foreach ($listings as $l)
+                    @foreach ($listings as $listing)
                         <div class="col-md-4 mb-4">
                             <div class="card h-100">
-                                @if ($l->image_path)
-                                    <img src="{{ asset('storage/' . $l->image_path) }}"
+                                @if ($listing->image_path)
+                                    <img src="{{ asset('storage/' . $listing->image_path) }}"
                                         class="card-img-top object-fit-cover" style="height: 200px;" alt="slika">
                                 @endif
 
                                 <div class="card-body">
-                                    <h5>{{ $l->name }}</h5>
-                                    <p>{{ $l->city->name ?? 'Nepoznato' }}</p>
+                                    <h5>{{ $listing->name }}</h5>
+                                    <p>{{ $listing->city->name ?? 'Nepoznato' }}</p>
 
-                                    <p><b>{{ $l->price_per_night }} €</b> / noć</p>
-                                    <p>{{ $l->beds }} kreveta, max {{ $l->max_persons }} osoba</p>
+                                    <p><b>{{ $listing->price_per_night }} €</b> / noć</p>
+                                    <p>{{ $listing->beds }} kreveta, max {{ $listing->max_persons }} osoba</p>
 
-                                    <a href="{{ route('admin.listings.edit', $l->id) }}" class="btn btn-sm btn-primary">
+                                    <a href="{{ route('admin.listings.edit', $listing->id) }}" class="btn btn-sm btn-primary">
                                         Detalji
                                     </a>
                                 </div>

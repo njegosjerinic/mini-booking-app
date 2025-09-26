@@ -38,8 +38,15 @@ Route::middleware(['auth', 'role:user', 'prevent-back-history'])->group(function
     Route::patch('/profile', [ProfileController::class, 'update']);
     Route::delete('/profile', [ProfileController::class, 'destroy']);
 
-    // rezervacije korisnika
-    Route::get('/my-reservations', [ReservationController::class, 'index']);
+    // umjesto postojeće GET rute dodaj name:
+    Route::get('reservations/{reservation}/reviews/create', [ReviewController::class, 'create'])
+    ->name('reservations.reviews.create');
+
+
+    Route::resource('reservations', ReservationController::class)->only(['index', 'store', 'destroy']);
+
+    Route::resource('reviews', ReviewController::class);
+
 });
 
 Route::middleware(['auth', 'role:admin', 'prevent-back-history'])

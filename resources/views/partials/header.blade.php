@@ -26,13 +26,13 @@
                         </li>
                     @elseif(auth()->user()->role === 'user')
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+                            <a class="nav-link" href="{{ route('dashboard') }}">Pocetna</a>
                         </li>
                         <li class="nav-item"> 
                             <a class="nav-link" href="#">Profil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Rezervacije</a>
+                            <a class="nav-link" href="{{ route('reservations.index') }}">Rezervacije</a>
                         </li>
                     @endif
 

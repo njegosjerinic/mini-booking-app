@@ -4,12 +4,6 @@
     <div class="container">
         <h2>Lista gradova</h2>
 
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
         <a href="{{ url('/admin/cities/create') }}" class="btn btn-success mb-3">Dodaj novi grad</a>
 
         <table class="table table-bordered">
