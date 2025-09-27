@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateUserRequest;
 use app\Models\User;
+use Exception;
 
 class UserController extends Controller
 {
@@ -19,7 +20,6 @@ class UserController extends Controller
         return view('admin.users.index', [
             'users' => $users
         ]);
-
     }
 
     /**
@@ -53,7 +53,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return view('admin.users.edit',compact('user'));
+        return view('admin.users.edit', compact('user'));
     }
 
     /**
@@ -61,7 +61,18 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, string $id)
     {
-        //
+        try {
+            $user = User::find($id);
+
+            if ($user) {
+                $user->update($request->all());
+                return redirect()->back()->with('success', 'Korisnik je uspjesno updejtovan.');
+            } else {
+                return redirect()->back()->with('error', 'Korisnik nije pronadjen.');
+            }
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Korisnik nije moga biti updejtovan zbog: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -69,6 +80,17 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $user = User::find($id);
+
+            if ($user) {
+                $user->delete();
+                return redirect()->back()->with('success', 'Korisnik je uspjesno izbrisan.');
+            } else {
+                return redirect()->back()->with('error', 'Korisnik nije pronadjen.');
+            }
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Korisnik nije moga biti izbrisan zbog: ' . $e->getMessage());
+        }
     }
 }

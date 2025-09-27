@@ -26,13 +26,13 @@
                         </li>
                     @elseif(auth()->user()->role === 'user')
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dashboard') }}">My Dashboard</a>
+                            <a class="nav-link" href="{{ route('dashboard') }}">Pocetna</a>
                         </li>
                         <li class="nav-item"> 
                             <a class="nav-link" href="#">Profil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">My Bookings</a>
+                            <a class="nav-link" href="{{ route('reservations.index') }}">Rezervacije</a>
                         </li>
                     @endif
 
@@ -47,7 +47,7 @@
                         <a class="nav-link" href="{{ route('login') }}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('register') }}" class="nav-link">Register</a>
+                        <a href="{{ route('register') }}" class="nav-link">Registracija</a>
                     </li>
                 @endauth
             </ul>

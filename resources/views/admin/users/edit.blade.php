@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-4">
+<div class="container">
     <h1>Uredi korisnika</h1>
 
     <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
@@ -30,8 +30,10 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-success">Sačuvaj izmene</button>
-        <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Nazad</a>
+        <div class="justify-content-between d-flex align-items-center">
+            <button type="submit" class="btn btn-success">Sačuvaj izmene</button>
+            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Nazad</a>
+        </div>
     </form>
 </div>
 @endsection

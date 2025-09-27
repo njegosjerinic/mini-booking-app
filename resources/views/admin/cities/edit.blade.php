@@ -23,8 +23,10 @@
             <input type="text" class="form-control" name="name" value="{{ $city->name }}">
         </div>
 
-        <button type="submit" class="btn btn-primary mt-2">Ažuriraj</button>
+        <div class="justify-content-between d-flex align-items-center">
+            <button type="submit" class="btn btn-primary mt-2">Ažuriraj</button>
+            <a href="{{ route('admin.cities.index') }}" class="btn d-block">Nazad</a>
+        </div>
     </form>
-        <a href="{{ route('admin.cities.index') }}" class="btn">Nazad</a>
 </div>
 @endsection

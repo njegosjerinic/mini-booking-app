@@ -14,7 +14,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('listing_id')->constrained()->onDelete('cascade');
-            $table->tinyInteger('rating')->checkBetween(1,5); // ocena 1–5
+            $table->foreignId('reservation_id')->constrained()->OnDelete('cascade');
+            $table->tinyInteger('rating'); // ocena 1–5
             $table->text('comment')->nullable();
             $table->timestamps();
         });
