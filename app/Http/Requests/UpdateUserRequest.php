@@ -2,12 +2,13 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Common\BaseFormRequest;
+
 use Illuminate\Validation\Rule;
 
-class UpdateUserRequest extends FormRequest
+class UpdateUserRequest extends BaseFormRequest
 {
-public function rules(): array
+    public function rules(): array
     {
         return [
             'name' => [
@@ -27,6 +28,23 @@ public function rules(): array
                 'required',
                 Rule::in(['admin', 'user']),
             ],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'Ime je obavezno.',
+            'name.string' => 'Ime mora biti tekst.',
+            'name.max' => 'Ime ne smije biti duže od 255 znakova.',
+            'name.unique' => 'Ime je već zauzeto.',
+            'email.required' => 'Email je obavezan.',
+            'email.string' => 'Email mora biti tekst.',
+            'email.email' => 'Email mora biti ispravna email adresa.',
+            'email.max' => 'Email ne smije biti duži od 255 znakova.',
+            'email.unique' => 'Email je već zauzet.',
+            'role.required' => 'Uloga je obavezna.',
+            'role.in' => 'Uloga mora biti admin ili user.',
         ];
     }
 }

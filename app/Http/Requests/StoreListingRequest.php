@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Common\BaseFormRequest;
 
-class StoreListingRequest extends FormRequest
+class StoreListingRequest extends BaseFormRequest
 {
     public function rules(): array
     {
@@ -19,4 +19,29 @@ class StoreListingRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'name.required' => 'Ime je obavezno.',
+            'name.string' => 'Ime mora biti tekst.',
+            'name.max' => 'Ime ne smije biti duže od 255 znakova.',
+
+            'description.string' => 'Opis mora biti tekst.',
+
+            'city_id.required' => 'Grad je obavezan.',
+            'city_id.exists' => 'Odabrani grad ne postoji.',
+
+            'price_per_night.required' => 'Cijena po noći je obavezna.',
+            'price_per_night.numeric' => 'Cijena po noći mora biti broj.',
+            'price_per_night.min' => 'Cijena po noći mora biti najmanje 0.',
+
+            'beds.required' => 'Broj kreveta je obavezan.',
+            'beds.integer' => 'Broj kreveta mora biti cijeli broj.',
+            'beds.min' => 'Broj kreveta mora biti najmanje 1.',
+
+            'max_persons.required' => 'Maksimalan broj osoba je obavezan.',
+            'max_persons.integer' => 'Maksimalan broj osoba mora biti cijeli broj.',
+            'max_persons.min' => 'Maksimalan broj osoba mora biti najmanje 1.',
+        ];
+    }
 }

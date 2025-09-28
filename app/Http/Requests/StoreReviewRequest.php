@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Common\BaseFormRequest;
 
-class StoreReviewRequest extends FormRequest
+class StoreReviewRequest extends BaseFormRequest
 {
     public function rules(): array
     {
@@ -16,4 +16,23 @@ class StoreReviewRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'listing_id.required' => 'Listing je obavezan.',
+            'listing_id.exists' => 'Odabrani listing ne postoji.',
+
+            'reservation_id.required' => 'Rezervacija je obavezna.',
+            'reservation_id.exists' => 'Odabrana rezervacija ne postoji.',
+
+            'rating.required' => 'Ocena je obavezna.',
+            'rating.integer' => 'Ocena mora biti broj.',
+            'rating.min' => 'Ocena mora biti najmanje 1.',
+            'rating.max' => 'Ocena ne može biti veća od 5.',
+
+            'comment.required' => 'Komentar je obavezan.',
+            'comment.string' => 'Komentar mora biti tekst.',
+            'comment.max' => 'Komentar ne može imati više od 500 karaktera.',
+        ];
+    }
 }

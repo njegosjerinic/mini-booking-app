@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\StoreListingRequest;
-use App\Http\Requests\UpdateListingRequest;
 use App\Models\City;
 use App\Models\Listing;
-use App\Models\Review;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ShowListingRequest;
+use App\Http\Requests\StoreListingRequest;
+use App\Http\Requests\UpdateListingRequest;
+use App\Http\Requests\SearchListingRequest;
 
-use Illuminate\Support\Facades\Log;
 use Exception;
 
 class ListingController extends Controller
@@ -17,7 +17,7 @@ class ListingController extends Controller
     public function index()
     {
         try {
-            $user = auth()->user();
+            $user = Auth::user();
             $listings = Listing::all();
             $cities = City::all();
 
@@ -53,24 +53,17 @@ class ListingController extends Controller
         }
     }
 
-    public function show($id,Request $request)
+    public function show(string $id, ShowListingRequest $request)
     {
-        try {
-            if ($request->filled('start_date') && $request->filled('end_date')){
-                $listing = Listing::findOrFail($id);
+        error_log($request);
+        $listing = Listing::find($request->id);
 
-                $reviews = $listing->reviews;
+        $reviews = $listing->reviews;
 
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
 
-                return view('listings.show', compact('listing','reviews','start_date', 'end_date'));
-            }else{
-                return redirect()->back()->with('error', 'Upisi datume za prikaz informacija o smjestaju');
-            }
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Greška pri učitavanju smeštaja.');
-        }
+        return view('listings.show', compact('listing', 'reviews', 'start_date', 'end_date'));
     }
 
     public function edit(string $id)
@@ -104,28 +97,22 @@ class ListingController extends Controller
         }
     }
 
-    public function search(Request $request)
+    public function search(SearchListingRequest $request)
     {
         try {
             $query = Listing::query();
 
-            if ($request->filled('city_id')) {
-                $query->where('city_id', $request->city_id);
-            }
+            $query->where('city_id', $request->city_id);
 
-            if ($request->filled('max_persons')) {
-                $query->where('max_persons', '>=', $request->max_persons);
-            }
+            $query->where('max_persons', '>=', value: $request->max_persons);
 
-            if ($request->filled('start_date') && $request->filled('end_date')) {
-                $query->whereDoesntHave('reservations', function ($q) use ($request) {
+            $query->whereDoesntHave('reservations', function ($q) use ($request) {
                 // Tražimo rezervacije koje se preklapaju sa traženim periodom
-                    $q->where(function ($x) use ($request) {
-                        $x->where('start_date', '<=', $request->end_date)
+                $q->where(function ($x) use ($request) {
+                    $x->where('start_date', '<=', $request->end_date)
                         ->where('end_date', '>=', $request->start_date);
-                    });
                 });
-            }
+            });
 
             $listings = $query->get();
             $cities = City::all();

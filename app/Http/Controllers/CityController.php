@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateCityRequest;
 use App\Http\Requests\StoreCityRequest;
 use App\Models\City;
-use Illuminate\Http\Request;
+use Exception;
 
 class CityController extends Controller
 {
@@ -39,7 +39,7 @@ class CityController extends Controller
 
 
     // Forma za editovanje postojećeg grada
-    public function edit($id)
+    public function edit(string $id)
     {
         $city = City::findOrFail($id);
         return view('admin.cities.edit', compact('city'));
@@ -55,11 +55,20 @@ class CityController extends Controller
     }
 
     // Brisanje grada
-    public function destroy($id)
+    public function destroy(string $id)
     {
-        $city = City::findOrFail($id);
-        $city->delete();
+        try {
+            $city = City::findOrFail($id);
 
-        return redirect()->back()->with('success', value:'Grad obrisan uspjesno');
+            if ($city->listings()->exists()) {
+                return redirect()->back()->with('error', 'Grad ima povezane oglase i ne može biti obrisan.');
+            }
+
+            $city->delete();
+
+            return redirect()->back()->with('success', 'Grad obrisan uspjesno');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }
