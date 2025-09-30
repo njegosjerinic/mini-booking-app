@@ -23,19 +23,19 @@
 
             <div class="col-md-3">
                 <label for="start_date">Datum dolaska</label>
-                <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                <input type="date" name="start_date" id="start_date" class="form-control"
+                    value="{{ request('start_date') }}">
             </div>
 
             <div class="col-md-3">
                 <label for="end_date">Datum odlaska</label>
-                <input type="date" name="end_date" id="end_date" class="form-control"
-                    value="{{ request('end_date') }}">
+                <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
             </div>
 
             <div class="col-md-2">
                 <label for="max_persons">Broj osoba</label>
                 <input type="number" name="max_persons" id="max_persons" class="form-control" min="1"
-                    value="{{ request('max_persons') }}">
+                    value="{{ request('max_persons', 1) }}">
             </div>
 
             <div class="col-md-1">
@@ -64,7 +64,8 @@
                                     <p><b>{{ $listing->price_per_night }} €</b> / noć</p>
                                     <p>{{ $listing->beds }} kreveta, max {{ $listing->max_persons }} osoba</p>
 
-                                    <a href="{{ route('admin.listings.edit', $listing->id) }}" class="btn btn-sm btn-primary">
+                                    <a href="{{ route('admin.listings.edit', $listing->id) }}"
+                                        class="btn btn-sm btn-primary">
                                         Detalji
                                     </a>
                                 </div>

@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreReviewRequest;
-use App\Models\Listing;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreReviewRequest;
 
-use App\Models\Review;
 use Exception;
+use App\Models\Review;
 
 class ReviewController extends Controller
 {
@@ -17,33 +16,34 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        //
+        $reviews = Review::all();
+
+        return view('admin.reviews.index', compact('reviews'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Reservation $reservation, Listing $listing)
+    public function create(Reservation $reservation)
     {
         $reservation->load('listing');
         return view('reviews.create', compact('reservation'));
-    } 
+    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreReviewRequest $request)
     {
-        try{
-            Review::create(array_merge(
-            $request->validated(),
-                    ['user_id' => auth()->id()]
-            ));
+        try {
+            $reservation = Reservation::findOrFail($request->reservation_id);
 
 
-            return redirect()->back()->with('success' , 'Recenzija je uspjesno dodata');
-        }catch(Exception $e){
-            return  redirect()->back()->with('error' , 'Recenzija nije uspjesno dodata');
+            Review::create($request->all());
+
+            return redirect()->back()->with('success', 'Recenzija je uspješno dodata');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Recenzija nije uspješno dodata');
         }
     }
 
@@ -74,8 +74,14 @@ class ReviewController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Review $review)
     {
-        //
+        try {
+            $review->delete();
+
+            return redirect()->back()->with('success', 'Recenzija je uspješno obrisana.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Neuspješno brisanje recenzije.');
+        }
     }
 }

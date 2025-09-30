@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Common\BaseFormRequest;
 
 class StoreReviewRequest extends BaseFormRequest
@@ -34,5 +35,12 @@ class StoreReviewRequest extends BaseFormRequest
             'comment.string' => 'Komentar mora biti tekst.',
             'comment.max' => 'Komentar ne može imati više od 500 karaktera.',
         ];
+    }
+
+    public function validationData()
+    {
+        return array_merge(parent::validationData(), [
+            'user_id' => Auth::user()->id,
+        ]);
     }
 }

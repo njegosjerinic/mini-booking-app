@@ -22,14 +22,20 @@
                             <a class="nav-link" href="{{ route('admin.listings.index') }}">Upravljanje Smjestajima</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.users.index') }}">Upravljanje korisnicima</a>
+                            <a class="nav-link" href="{{ route('admin.users.index') }}">Upravljanje Korisnicima</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.reviews.index') }}">Upravljanje Recenzijama</a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="{{ route('admin.reservations.index') }}">Upravljanje Rezervacijama</a>
                         </li>
                     @elseif(auth()->user()->role === 'user')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('dashboard') }}">Pocetna</a>
                         </li>
                         <li class="nav-item"> 
-                            <a class="nav-link" href="#">Profil</a>
+                            <a class="nav-link" href="{{ route('profile.edit') }}">Profil</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('reservations.index') }}">Rezervacije</a>

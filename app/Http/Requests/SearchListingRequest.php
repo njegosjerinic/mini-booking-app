@@ -24,14 +24,14 @@ class SearchListingRequest extends BaseFormRequest
     public function messages()
     {
         return [
-            'city_id.integer' => 'The city ID must be an integer.',
-            'city_id.exists' => 'The selected city does not exist.',
-            'max_persons.integer' => 'Maximum persons must be an integer.',
-            'max_persons.min' => 'Maximum persons must be at least 1.',
-            'start_date.date' => 'Start date must be a valid date.',
-            'start_date.before_or_equal' => 'Start date must be before or equal to end date.',
-            'end_date.date' => 'End date must be a valid date.',
-            'end_date.after_or_equal' => 'End date must be after or equal to start date.',
+            'city_id.integer' => 'ID grada mora biti cijeli broj.',
+            'city_id.exists' => 'Odabrani grad ne postoji.',
+            'max_persons.integer' => 'Maksimalan broj osoba mora biti cijeli broj.',
+            'max_persons.min' => 'Maksimalan broj osoba mora biti najmanje 1.',
+            'start_date.date' => 'Datum početka mora biti ispravan datum.',
+            'start_date.before_or_equal' => 'Datum početka mora biti prije ili jednak datumu završetka.',
+            'end_date.date' => 'Datum završetka mora biti ispravan datum.',
+            'end_date.after_or_equal' => 'Datum završetka mora biti nakon ili jednak datumu početka.',
         ];
     }
 }

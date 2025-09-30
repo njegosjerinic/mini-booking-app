@@ -16,45 +16,61 @@
                     <li class="list-group-item"><strong>Grad:</strong> {{ $listing->city->name }}</li>
                     <li class="list-group-item"><strong>Maksimalno gostiju:</strong> {{ $listing->max_persons }}</li>
                     <li class="list-group-item"><strong>Cena po noći:</strong> €{{ $listing->price_per_night }}</li>
-                    <li class="list-group-item"><strong>Početak rezervacije:</strong> {{ $start_date }}</li>
-                    <li class="list-group-item"><strong>Kraj rezervacije:</strong> {{ $end_date }}</li>
+                    <li class="list-group-item"><strong>Početak rezervacije:</strong> {{ $start_date ?? '-' }}</li>
+                    <li class="list-group-item"><strong>Kraj rezervacije:</strong> {{ $end_date ?? '-' }}</li>
                 </ul>
 
-                {{-- Forma za potvrdu rezervacije --}}
                 <div class="justify-content-between d-flex align-items-center">
-                    <a href="{{ url()->previous() }}" class="btn btn-secondary">← Nazad na rezultate</a>
+                    <a href="{{ route('dashboard') }}" class="btn btn-secondary align-self-end">← Nazad na rezultate</a>
 
-                    <form action="{{ route('reservations.store') }}" method="POST" class="d-inline">
+                    <form action="{{ route('reservations.store') }}" method="POST"
+                        class="d-flex justify-content-between align-items-end reservation-form" @style([
+                            'width: 60%;' => !($start_date && $end_date),
+                        ]) style="">
                         @csrf
                         <input type="hidden" name="listing_id" value="{{ $listing->id }}">
-                        <input type="hidden" name="start_date" value="{{ $start_date }}">
-                        <input type="hidden" name="end_date" value="{{ $end_date }}">
-                        <button type="submit" class="btn btn-success">Rezerviši</button>
+                        @if ($start_date && $end_date)
+                            <input type="hidden" name="start_date" value="{{ $start_date }}">
+                            <input type="hidden" name="end_date" value="{{ $end_date }}">
+                        @else
+                            <div class="col-md-5">
+                                <label for="start_date">Datum dolaska</label>
+                                <input type="date" name="start_date" id="start_date" class="form-control start_date"
+                                    value="{{ request('start_date') }}">
+                            </div>
+
+                            <div class="col-md-5">
+                                <label for="end_date">Datum odlaska</label>
+                                <input type="date" name="end_date" id="end_date" class="form-control end_date"
+                                    value="{{ request('end_date') }}">
+                            </div>
+                        @endif
+                        <button type="submit" class="btn btn-success" style="height: fit-content">Rezerviši</button>
                     </form>
                 </div>
             </div>
         </div>
         <div class="card mb-4">
-            <h3>Recenzije</h3>
-            @if(count($reviews) == 0)
-                <p>Nema recenzija</p>
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Recenzije</h3>
+            </div>
+            @if (count($reviews) == 0)
+                <div class="card-body">
+                    <p class="text-muted mb-0">Nema recenzija</p>
+                </div>
             @else
                 <div class="card-body">
                     @foreach ($reviews as $review)
-                        <div>
-                            <div>
-                                <strong>{{ $review->user->$name }}</strong>
-                                <span> {{ $review->rating }}/5</span>
-                                <p>{{ $review->comment }}</p>
+                        <div class="mb-3 border-bottom pb-2">
+                            <div class="d-flex f-row align-items-center justify-content-between mb-1">
+                                <strong class="me-2">{{ $review->user->name }}</strong>
+                                <span class="badge bg-warning text-dark">{{ $review->rating }}/5</span>
                             </div>
+                            <p class="mb-0">{{ $review->comment }}</p>
                         </div>
                     @endforeach
-                </div>
-                <div class="card-body">
-                    <form action=""></form>
                 </div>
             @endif
         </div>
     </div>
 @endsection
-

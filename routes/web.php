@@ -34,9 +34,9 @@ Route::middleware(['auth', 'role:user', 'prevent-back-history'])->group(function
     Route::get('/dashboard', [ListingController::class, 'index'])->name('dashboard');
 
     // profil
-    Route::get('/profile', [ProfileController::class, 'edit']);
-    Route::patch('/profile', [ProfileController::class, 'update']);
-    Route::delete('/profile', [ProfileController::class, 'destroy']);
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // umjesto postojeće GET rute dodaj name:
     Route::get('reservations/{reservation}/reviews/create', [ReviewController::class, 'create'])
@@ -70,10 +70,10 @@ Route::middleware(['auth', 'role:admin', 'prevent-back-history'])
         Route::resource('listings', ListingController::class);
 
         // rezervacije
-        Route::resource('reservations', ReservationController::class);
+        Route::resource('reservations', ReservationController::class)->only('index', 'destroy');
 
         // recenzije
-        Route::resource('reviews', ReviewController::class);
+        Route::resource('reviews', ReviewController::class)->only('index','destroy');
     });
 
 
