@@ -46,9 +46,17 @@ class ListingController extends Controller
     public function store(StoreListingRequest $request)
     {
         try {
-            Listing::create($request->validated());
+
+            $data = $request->validated();
+
+            if ($request->hasFile('image_path')) {
+                $imagePath = $request->file('image_path')->store('listings', 'public');
+                $data['image_path'] = $imagePath; // Make sure your Listing model has 'image' fillable
+            }
+
+            Listing::create($data);
             return redirect()->route('admin.listings.index')->with('success', 'Smeštaj uspešno napravljen.');
-        } catch (Exception $e) {
+        } catch (Exception) {
             return redirect()->back()->with('error', 'Greška pri kreiranju smeštaja.');
         }
     }

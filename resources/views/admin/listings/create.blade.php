@@ -65,11 +65,10 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-
             <div class="mb-3">
-                <label for="slika" class="form-label">Slika objekta</label>
-                <input type="file" accept="image/*" class="form-control @error('slika') is-invalid @enderror"
-                    id="slika" name="slika">
+                <label for="image_path" class="form-label">Slika objekta</label>
+                <input type="file" accept="image/*" class="form-control @error('image_path') is-invalid @enderror"
+                    id="image_path" name="image_path">
                 @error('image_path')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
