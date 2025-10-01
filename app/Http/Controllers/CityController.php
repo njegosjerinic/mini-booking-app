@@ -32,11 +32,6 @@ class CityController extends Controller
         return redirect()->route('admin.cities.index')->with('success', 'Grad uspjesno napravljen');
     }
 
-    public function show(City $city)
-    {
-        //
-    }
-
 
     // Forma za editovanje postojećeg grada
     public function edit(string $id)

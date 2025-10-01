@@ -18,7 +18,7 @@
                     <tr>
                         <td>{{ $city->name }}</td>
                         <td>
-                            <a href="{{ route('admin.cities.edit', $city->id) }}" class="btn btn-warning btn-sm">Izmeni</a>
+                            <a href="{{ route('admin.cities.edit', $city->id) }}" class="btn btn-warning btn-sm">Izmjeni</a>
 
                             <form action="{{ route('admin.cities.destroy', $city->id) }}" method="POST"
                                 style="display:inline-block;">

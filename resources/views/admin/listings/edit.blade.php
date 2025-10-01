@@ -9,7 +9,7 @@
             @method('PUT')
 
             <div class="mb-3">
-                <label for="name" class="form-label">Naziv smeštaja</label>
+                <label for="name" class="form-label">Naziv smještaja</label>
                 <input type="text" name="name" id="name" value="{{ old('name', $listing->name) }}"
                     class="form-control" required>
             </div>
@@ -20,7 +20,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="price_per_night" class="form-label">Cena po noći (€)</label>
+                <label for="price_per_night" class="form-label">Cjena po noći (€)</label>
                 <input type="number" name="price_per_night" id="price_per_night"
                     value="{{ old('price_per_night', $listing->price_per_night) }}" class="form-control" required>
             </div>
@@ -50,7 +50,8 @@
 
             <div class="mb-3">
                 <label for="image_path" class="form-label">Slika (opciono)</label>
-                <input type="file" accept="image/*" name="image_path" id="image_path" class="form-control">
+                <input type="file" accept="image/*" name="image_path" id="image_path" class="form-control"
+                value="{{ old('image_path', $listing->image_path) }}">
                 @if ($listing->image_path)
                     <div class="mt-2 position-relative w-100" style="height: 200px;">
                         <img src="{{ asset('storage/' . $listing->image_path) }}"
@@ -71,8 +72,8 @@
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-danger"
-                onclick="return confirm('Da li ste sigurni da želite obrisati ovaj smeštaj?')">
-                Obriši smeštaj
+                onclick="return confirm('Da li ste sigurni da želite obrisati ovaj smještaj?')">
+                Obriši smještaj
             </button>
         </form>
     </div>

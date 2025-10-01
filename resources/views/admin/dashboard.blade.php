@@ -11,7 +11,7 @@
 
         <div class="list-group">
             <a href="{{ route('admin.cities.index') }}" class="list-group-item list-group-item-action">Upravljanje Gradovima</a>
-            <a href="{{ route('admin.listings.index') }}" class="list-group-item list-group-item-action">Upravljanje Smeštajima</a>
+            <a href="{{ route('admin.listings.index') }}" class="list-group-item list-group-item-action">Upravljanje Smještajima</a>
             <a href="{{ route('admin.users.index') }}" class="list-group-item list-group-item-action">Upravljanje Korisnicima</a>
             <a href="{{ route('admin.reservations.index') }}" class="list-group-item list-group-item-action">Upravljanje Rezervacijama</a>
             <a href="{{ route('admin.reviews.index') }}" class="list-group-item list-group-item-action">Upravljanje Recenzijama</a>

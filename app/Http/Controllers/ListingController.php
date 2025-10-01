@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\Listing;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ShowListingRequest;
 use App\Http\Requests\StoreListingRequest;
 use App\Http\Requests\UpdateListingRequest;
@@ -51,7 +52,7 @@ class ListingController extends Controller
 
             if ($request->hasFile('image_path')) {
                 $imagePath = $request->file('image_path')->store('listings', 'public');
-                $data['image_path'] = $imagePath; // Make sure your Listing model has 'image' fillable
+                $data['image_path'] = $imagePath;
             }
 
             Listing::create($data);
@@ -63,7 +64,6 @@ class ListingController extends Controller
 
     public function show(string $id, ShowListingRequest $request)
     {
-        error_log($request);
         $listing = Listing::find($request->id);
 
         $reviews = $listing->reviews;
@@ -87,13 +87,25 @@ class ListingController extends Controller
 
     public function update(UpdateListingRequest $request, Listing $listing)
     {
-        try {
-            $listing->update($request->validated());
-            return redirect()->route('admin.listings.index')->with('success', 'Smeštaj je izmenjen.');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Greška pri izmeni smeštaja.');
+        $data = $request->validated();
+
+        //Ako postoji nova slika
+        if ($request->hasFile('image_path')) {
+            //Obrisati staru ako postoji
+            if ($listing->image_path && \Storage::disk('public')->exists($listing->image_path)) {
+                \Storage::disk('public')->delete($listing->image_path);
+            }
+
+            //Cuvaj novu
+            $path = $request->file('image_path')->store('listings', 'public');
+            $data['image_path'] = $path;
         }
+
+        $listing->update($data);
+
+        return redirect()->route('admin.listings.index')->with('success', 'Smeštaj uspešno izmenjen.');
     }
+
 
     public function destroy(string $id)
     {

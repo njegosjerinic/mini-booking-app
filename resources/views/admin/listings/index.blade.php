@@ -5,7 +5,7 @@
         <h1>Upravljenje smještajem</h1>
 
 
-        <a class="btn btn-success" href="{{ route('admin.listings.create') }}">Napravi smjestaj</a>
+        <a class="btn btn-success" href="{{ route('admin.listings.create') }}">Napravi smještaj</a>
 
         <form action="{{ route('admin.listings.search') }}" method="GET"
             class="row g-3 mb-4 align-items-end justify-content-between">
@@ -44,9 +44,9 @@
         </form>
 
         <div>
-            <h1>Lista smeštaja</h1>
+            <h1>Lista smještaja</h1>
             @if (count($listings) == 0)
-                <p>Nema smeštaja trenutno.</p>
+                <p>Nema smještaja trenutno.</p>
             @else
                 <div class="row">
                     @foreach ($listings as $listing)

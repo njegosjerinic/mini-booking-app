@@ -37,11 +37,6 @@
                         </div>
                     @endforeach
                 </div>
-                <div class="card-footer">
-                    <form action="" method="POST" class="d-flex flex-column gap-2">
-                        {{-- Add your form fields here --}}
-                    </form>
-                </div>
             @endif
         </div>
 

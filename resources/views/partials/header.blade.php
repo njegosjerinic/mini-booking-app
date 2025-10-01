@@ -32,7 +32,7 @@
                         </li>
                     @elseif(auth()->user()->role === 'user')
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dashboard') }}">Pocetna</a>
+                            <a class="nav-link" href="{{ route('dashboard') }}">Početna</a>
                         </li>
                         <li class="nav-item"> 
                             <a class="nav-link" href="{{ route('profile.edit') }}">Profil</a>

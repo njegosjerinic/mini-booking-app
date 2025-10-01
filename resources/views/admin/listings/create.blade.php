@@ -40,8 +40,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="price_per_night" class="form-label">Cena po noći (EUR)</label>
-                <input type="number" step="0.01" class="form-control @error('cena') is-invalid @enderror"
+                <label for="price_per_night" class="form-label">Cjena po noći (EUR)</label>
+                <input type="number" step="0.01" class="form-control @error('cjena') is-invalid @enderror"
                     id="price_per_night" name="price_per_night" value="{{ old('price_per_night') }}">
                 @error('price_per_night')
                     <div class="invalid-feedback">{{ $message }}</div>
