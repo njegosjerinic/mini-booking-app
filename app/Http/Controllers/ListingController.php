@@ -129,8 +129,8 @@ class ListingController extends Controller
             $query->whereDoesntHave('reservations', function ($q) use ($request) {
                 // Tražimo rezervacije koje se preklapaju sa traženim periodom
                 $q->where(function ($x) use ($request) {
-                    $x->where('start_date', '<=', $request->end_date)
-                        ->where('end_date', '>=', $request->start_date);
+                    $x->where('start_date', '<', $request->end_date)
+                        ->where('end_date', '>', $request->start_date);
                 });
             });
 

@@ -14,7 +14,7 @@ class CityController extends Controller
     public function index()
     {
         $cities = City::all();
-        return view('admin.cities.index', ['cities' => $cities]);
+        return view('admin.cities.index', compact('cities'));
     }
 
     // Forma za dodavanje novog grada
