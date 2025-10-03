@@ -18,7 +18,7 @@
         <div class="col-md-3">
             <label for="start_date">Datum dolaska</label>
             <input type="date" name="start_date" id="start_date" class="form-control start_date"
-                value="{{ request('start_date') }}">
+               min="{{ now()->format('Y-m-d') }}"  value="{{ request('start_date') }}">
         </div>
 
         <div class="col-md-3">

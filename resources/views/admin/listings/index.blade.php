@@ -7,8 +7,7 @@
 
         <a class="btn btn-success" href="{{ route('admin.listings.create') }}">Napravi smještaj</a>
 
-        <form action="{{ route('admin.listings.search') }}" method="GET"
-            class="row g-3 mb-4 align-items-end justify-content-between">
+        <form action="{{ route('admin.listings.search') }}" method="GET"    class="row g-3 mb-4 align-items-end justify-content-between reservation-form">
             <div class="col-md-3">
                 <label for="city">Lokacija</label>
                 <select required name="city_id" id="city" class="form-control">
@@ -23,13 +22,13 @@
 
             <div class="col-md-3">
                 <label for="start_date">Datum dolaska</label>
-                <input type="date" name="start_date" id="start_date" class="form-control"
-                    value="{{ request('start_date') }}">
+                <input type="date" name="start_date" id="start_date" class="form-control start_date"
+                   min="{{ now()->format('Y-m-d') }}"  value="{{ request('start_date') }}">
             </div>
 
             <div class="col-md-3">
                 <label for="end_date">Datum odlaska</label>
-                <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                <input type="date" name="end_date" id="end_date" class="form-control end_date" value="{{ request('end_date') }}">
             </div>
 
             <div class="col-md-2">

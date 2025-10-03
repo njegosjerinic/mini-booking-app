@@ -16,9 +16,7 @@ class UserController extends Controller
     {
         $users = User::all();
 
-        return view('admin.users.index', [
-            'users' => $users
-        ]);
+        return view('admin.users.index', compact('users'));
     }
 
     public function edit(string $id)
