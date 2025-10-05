@@ -18,13 +18,13 @@ class ReservationController extends Controller
     {
         $user = Auth::user();
         $user_id = Auth::user()->id;
-        $reservations = Reservation::where('user_id', $user_id)->with('listing')->get();
-        $admin_reservations = Reservation::all();
-
+        $reservations = Reservation::query();
 
         if ($user->role == 'user') {
+            $reservations = $reservations->where('user_id', $user_id)->with('listing')->get();
             return view('reservations.index', compact('reservations'));
         } else if ($user->role == 'admin') {
+            $admin_reservations = Reservation::all();
             return view('admin.reservations.index', compact('admin_reservations'));
         }
     }

@@ -54,13 +54,13 @@
             <div class="card-header bg-primary text-white">
                 <h3 class="mb-0">Recenzije</h3>
             </div>
-            @if (count($reviews) == 0)
+            @if (count($listing->reviews) == 0)
                 <div class="card-body">
                     <p class="text-muted mb-0">Nema recenzija</p>
                 </div>
             @else
                 <div class="card-body">
-                    @foreach ($reviews as $review)
+                    @foreach ($listing->reviews as $review)
                         <div class="mb-3 border-bottom pb-2">
                             <div class="d-flex f-row align-items-center justify-content-between mb-1">
                                 <strong class="me-2">{{ $review->user->name }}</strong>

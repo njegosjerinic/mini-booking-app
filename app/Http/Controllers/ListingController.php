@@ -64,14 +64,12 @@ class ListingController extends Controller
 
     public function show(string $id, ShowListingRequest $request)
     {
-        $listing = Listing::find($request->id);
-
-        $reviews = $listing->reviews;
+        $listing = Listing::with('reviews')->find($id);
 
         $start_date = $request->start_date;
         $end_date = $request->end_date;
 
-        return view('listings.show', compact('listing', 'reviews', 'start_date', 'end_date'));
+        return view('listings.show', compact('listing', 'start_date', 'end_date'));
     }
 
     public function edit(string $id)

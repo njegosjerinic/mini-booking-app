@@ -22,10 +22,4 @@ class ShowListingRequest extends BaseFormRequest
         ];
     }
 
-    public function validationData()
-    {
-        return array_merge($this->all(), [
-            'id' => $this->route('id'),
-        ]);
-    }
 }
