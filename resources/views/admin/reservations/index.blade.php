@@ -14,15 +14,6 @@
                             <h5>{{ $reservation->listing->name }}</h5>
                             <p>{{ $reservation->start_date }}</p>
                             <p>{{ $reservation->end_date }}</p>
-                        
-                            <form action="{{ route('admin.reservations.destroy', $reservation->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger"
-                                onclick="return confirm('Da li ste sigurni da želite obrisati ovu rezervaciju?')">
-                                Obriši rezervaciju
-                                </button>
-                            </form>
                         </div>
                     </div>
                 </div>

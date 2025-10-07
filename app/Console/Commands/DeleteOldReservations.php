@@ -12,7 +12,7 @@ class DeleteOldReservations extends Command
      *
      * @var string
      */
-    protected $signature = 'app:delete-old-reservations';
+    protected $signature = 'reservations:delete-old-reservations';
 
     /**
      * The console command description.
@@ -26,10 +26,11 @@ class DeleteOldReservations extends Command
      */
     public function handle()
     {
-        $now = now();
+        $query = Reservation::withTrashed()
+            ->where('created_at', '<', now()->subMonths(6));
 
-        $deletedCount = Reservation::where('end_date', '<', $now)->delete();
+        $count = $query->forceDelete();
 
-        $this->info("Obrisano je $deletedCount starih rezervacija.");
+        $this->info("Trajno obrisano {$count} rezervacija starijih od 6 mjeseci.");
     }
 }

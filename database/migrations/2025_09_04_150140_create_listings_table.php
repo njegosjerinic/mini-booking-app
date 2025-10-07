@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('max_persons');
             $table->string('image_path')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

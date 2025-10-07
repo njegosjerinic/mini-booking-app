@@ -153,12 +153,22 @@ class ListingController extends Controller
     public function destroy(string $id)
     {
         try {
-            Listing::findOrFail($id)->delete();
+            $listing = Listing::findOrFail($id);
+
+            foreach ($listing->reservations as $reservation) {
+                $reservation->review()->delete();
+            }
+
+            $listing->reservations()->delete();
+
+            $listing->delete();
+            
             return redirect()->route('admin.listings.index')->with('modal', [
                 'message' => 'Smeštaj obrisan.',
                 'type' => 'success'
             ]);
         } catch (Exception $e) {
+            Log::error('Error deleting listing: ' . $e->getMessage());
             return redirect()->back()->with('modal', [
                 'message' => 'Greška pri brisanju smeštaja.',
                 'type' => 'error'

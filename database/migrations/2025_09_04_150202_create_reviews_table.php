@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('comment')->nullable();
             $table->unique(['user_id', 'listing_id' ,'reservation_id']);
             $table->timestamps();
+
+            $table->softDeletes();
         });
     }
 

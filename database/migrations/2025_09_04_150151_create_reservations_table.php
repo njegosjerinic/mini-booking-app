@@ -17,6 +17,11 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->timestamps();
+
+            $table->index('start_date');
+            $table->index('end_date');
+
+            $table->softDeletes();
         });
     }
 

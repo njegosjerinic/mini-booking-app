@@ -15,7 +15,10 @@
                     @foreach ($reviews as $review)
                         <div class="mb-4 pb-3 border-bottom">
                             <div class="row align-items-center mb-2">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
+                                    <strong>{{ $review->listing->name }}</strong>
+                                </div>
+                                <div class="col-md-3">
                                     <strong>{{ $review->user->name }}</strong>
                                 </div>
                                 <div class="col-md-2">

@@ -73,27 +73,4 @@ class ReservationController extends Controller
                 ]);
         }
     }
-
-    public function destroy(string $id)
-    {
-        try {
-            Reservation::findOrFail($id)->delete();
-            if (Auth::user()->role == 'admin') {
-                return redirect()->route('admin.reservations.index')->with('modal', [
-                    'message' => 'Rezervacija je obrisana',
-                    'type' => 'success'
-                ]);
-            } elseif (Auth::user()->role == 'user') {
-                return redirect()->route('reservations.index')->with('modal', [
-                    'message' => 'Rezervacije obrisana.',
-                    'type' => 'success'
-                ]);
-            }
-        } catch (Exception $e) {
-            return redirect()->back()->with('modal', [
-                'message' => 'Greška pri brisanju rezervacije.',
-                'type' => 'error'
-            ]);
-        }
-    }
 }
