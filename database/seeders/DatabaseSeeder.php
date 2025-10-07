@@ -16,12 +16,10 @@ class DatabaseSeeder extends Seeder
 
         // Poziv svih ostalih seedera
         $this->call([
-            CitySeeder::class
+            CitySeeder::class,
+            ListingSeeder::class,
+            UserSeeder::class
         ]);
-
-        $this->call(ListingSeeder::class);
-
-        $this->call(UserSeeder::class);
 
     }
 }

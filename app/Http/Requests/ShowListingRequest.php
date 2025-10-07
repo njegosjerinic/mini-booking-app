@@ -9,7 +9,6 @@ class ShowListingRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'id' => 'integer|exists:listings,id',
             'start_date' => 'date|before_or_equal:end_date',
             'end_date' => 'date|after_or_equal:start_date',
         ];
@@ -17,7 +16,6 @@ class ShowListingRequest extends BaseFormRequest
     public function messages()
     {
         return [
-            'id.exists' => 'Odabrani oglas ne postoji u bazi podataka.',
             'end_date.after_or_equal' => 'Datum završetka mora biti isti ili nakon datuma početka.',
         ];
     }

@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Listing;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ListingSeeder extends Seeder
 {
@@ -12,6 +13,8 @@ class ListingSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('listings')->truncate();
+
         $listings = [
             [
                 'name' => 'Apartman Sunce',

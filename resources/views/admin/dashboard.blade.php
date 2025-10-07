@@ -4,11 +4,7 @@
 <div class="container">
     <div class="card shadow-lg p-4">
         <h1 class="mb-4">Admin Dashboard</h1>
-
-        @if(session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
-
+        
         <div class="list-group">
             <a href="{{ route('admin.cities.index') }}" class="list-group-item list-group-item-action">Upravljanje Gradovima</a>
             <a href="{{ route('admin.listings.index') }}" class="list-group-item list-group-item-action">Upravljanje Smještajima</a>

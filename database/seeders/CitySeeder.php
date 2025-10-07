@@ -2,13 +2,17 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\City;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class CitySeeder extends Seeder
 {
     public function run(): void
     {
+
+        DB::table('cities')->truncate();
+
         $cities = [
             'Belgrade',
             'Novi Sad',

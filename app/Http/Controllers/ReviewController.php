@@ -33,9 +33,15 @@ class ReviewController extends Controller
 
             Review::create($request->all());
 
-            return redirect()->back()->with('success', 'Recenzija je uspješno dodata');
+            return redirect()->back()->with('modal', [
+                'message' => 'Recenzija je uspješno dodata',
+                'type' => 'success'
+            ]);
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Recenzija nije uspješno dodata');
+            return redirect()->back()->with('modal', [
+                'message' => 'Recenzija nije uspješno dodata',
+                'type' => 'error'
+            ]);
         }
     }
 
@@ -44,9 +50,15 @@ class ReviewController extends Controller
         try {
             $review->delete();
 
-            return redirect()->back()->with('success', 'Recenzija je uspješno obrisana.');
+            return redirect()->back()->with('modal', [
+                'message' => 'Recenzija je uspješno obrisana.',
+                'type' => 'success'
+            ]);
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Neuspješno brisanje recenzije.');
+            return redirect()->back()->with('modal', [
+                'message' => 'Neuspješno brisanje recenzije.',
+                'type' => 'error'
+            ]);
         }
     }
 }

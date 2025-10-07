@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\UpdateUserRequest;
 use app\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends Controller
 {
@@ -21,11 +21,16 @@ class UserController extends Controller
 
     public function edit(string $id)
     {
-        $user = User::findOrFail($id);
-
-        return view('admin.users.edit', compact('user'));
+        try {
+            $user = User::findOrFail($id);
+            return view('admin.users.edit', compact('user'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->back()->with('modal', [
+                'message' => 'Korisnik nije pronađen.',
+                'type' => 'error'
+            ]);
+        }
     }
-
 
     public function update(UpdateUserRequest $request, string $id)
     {
@@ -33,7 +38,10 @@ class UserController extends Controller
             $user = User::find($id);
 
             if (!$user) {
-                return redirect()->back()->with('error', 'Korisnik nije pronađen.');
+                return redirect()->back()->with('modal', [
+                    'message' => 'Korisnik nije pronađen.',
+                    'type' => 'error'
+                ]);
             }
 
             $data = $request->except('role');
@@ -41,18 +49,27 @@ class UserController extends Controller
             $user->fill($data);
 
             if ($request->filled('role')) {
-                if($user->id != Auth::user()->id){
+                if ($user->id != Auth::user()->id) {
                     $user->role = $request->input('role');
-                }else{
-                    return redirect()->back()->with('error', 'Ne moze se izmjeniti uloga korisnik dok je ulogovan');
+                } else {
+                    return redirect()->back()->with('modal', [
+                        'message' => 'Ne moze se izmjeniti uloga korisnik dok je ulogovan',
+                        'type' => 'error'
+                    ]);
                 }
             }
 
             $user->save();
 
-            return redirect()->back()->with('success', 'Korisnik je uspješno ažuriran.');
+            return redirect()->back()->with('modal', [
+                'message' => 'Korisnik je uspješno ažuriran.',
+                'type' => 'success'
+            ]);
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Korisnik nije mogao biti ažuriran zbog: ' . $e->getMessage());
+            return redirect()->back()->with('modal', [
+                'message' => 'Korisnik nije mogao biti ažuriran.',
+                'type' => 'error'
+            ]);
         }
     }
 
@@ -60,16 +77,17 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         try {
-            $user = User::find($id);
-
-            if ($user) {
-                $user->delete();
-                return redirect()->back()->with('success', 'Korisnik je uspjesno izbrisan.');
-            } else {
-                return redirect()->back()->with('error', 'Korisnik nije pronadjen.');
-            }
+            $user = User::findOrFail($id);
+            $user->delete();
+            return redirect()->back()->with('modal', [
+                'message' => 'Korisnik je uspjesno izbrisan.',
+                'type' => 'success'
+            ]);
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Korisnik nije moga biti izbrisan zbog: ' . $e->getMessage());
+            return redirect()->back()->with('modal', [
+                'message' => 'Korisnik nije moga biti izbrisan.',
+                'type' => 'error'
+            ]);
         }
     }
 }

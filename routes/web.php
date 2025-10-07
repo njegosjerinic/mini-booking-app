@@ -27,7 +27,9 @@ Route::get('/listings/search', [ListingController::class, 'search']);
 
 Route::get('/listings/{id}', [ListingController::class, 'show'])->name('listings.show');
 
-
+Route::get('/listings/{listing}', function () {
+    abort(404);
+})->where('listing', '[0-9A-Za-z-_]+');
 
 // user deo (ulogovani korisnici)
 Route::middleware(['auth', 'role:user', 'prevent-back-history'])->group(function () {
@@ -40,13 +42,23 @@ Route::middleware(['auth', 'role:user', 'prevent-back-history'])->group(function
 
     // umjesto postojeće GET rute dodaj name:
     Route::get('reservations/{reservation}/reviews/create', [ReviewController::class, 'create'])
-    ->name('reservations.reviews.create');
+        ->name('reservations.reviews.create');
 
+    Route::get('reservations/{reservation}/reviews/{review}', function () {
+        abort(404);
+    })->where('reservation', '[0-9A-Za-z-_]+')->where('review', '[0-9A-Za-z-_]+');
 
     Route::resource('reservations', ReservationController::class)->only(['index', 'store', 'destroy']);
 
+    Route::get('reservations/{reservation}', function () {
+        abort(404);
+    })->where('reservation', '[0-9A-Za-z-_]+');
+
     Route::resource('reviews', ReviewController::class);
 
+    Route::get('reviews/{review}', function () {
+        abort(404);
+    })->where('review', '[0-9A-Za-z-_]+');
 });
 
 Route::middleware(['auth', 'role:admin', 'prevent-back-history'])
@@ -61,19 +73,39 @@ Route::middleware(['auth', 'role:admin', 'prevent-back-history'])
         // gradovi
         Route::resource('cities', CityController::class);
 
+        Route::get('cities/{city}', function () {
+            abort(404);
+        })->where('city', '[0-9A-Za-z-_]+');
+
         // korisnici
         Route::resource('users', UserController::class);
+
+        Route::get('users/{user}', function () {
+            abort(404);
+        })->where('user', '[0-9A-Za-z-_]+');
 
         Route::get('listings/search', [ListingController::class, 'search'])->name('listings.search');
 
         // smeštaji
         Route::resource('listings', ListingController::class);
 
+        Route::get('listings/{listing}', function () {
+            abort(404);
+        })->where('listing', '[0-9A-Za-z-_]+');
+
+        Route::get('reservations/{reservation}', function () {
+            abort(404);
+        })->where('reservation', '[0-9A-Za-z-_]+');
+
         // rezervacije
         Route::resource('reservations', ReservationController::class)->only('index', 'destroy');
 
         // recenzije
-        Route::resource('reviews', ReviewController::class)->only('index','destroy');
+        Route::resource('reviews', ReviewController::class)->only('index', 'destroy');
+
+        Route::get('reviews/{review}', function () {
+            abort(404);
+        })->where('review', '[0-9A-Za-z-_]+');
     });
 
 

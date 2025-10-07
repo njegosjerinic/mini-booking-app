@@ -12,6 +12,7 @@ use App\Http\Requests\UpdateListingRequest;
 use App\Http\Requests\SearchListingRequest;
 
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ListingController extends Controller
 {
@@ -28,9 +29,15 @@ class ListingController extends Controller
                 return view('admin.listings.index', compact('listings', 'cities'));
             }
 
-            return redirect()->back()->with('error', 'Nepoznata rola.');
+            return redirect()->back()->with('modal', [
+                'message' => 'Nepoznata rola.',
+                'type' => 'error'
+            ]);
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Došlo je do greške pri učitavanju.');
+            return redirect()->back()->with('modal', [
+                'message' => 'Došlo je do greške pri učitavanju.',
+                'type' => 'error'
+            ]);
         }
     }
 
@@ -40,7 +47,10 @@ class ListingController extends Controller
             $cities = City::all();
             return view('admin.listings.create', compact('cities'));
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Ne mogu učitati formu za kreiranje.');
+            return redirect()->back()->with('modal', [
+                'message' => 'Ne mogu učitati formu za kreiranje.',
+                'type' => 'error'
+            ]);
         }
     }
 
@@ -51,25 +61,52 @@ class ListingController extends Controller
             $data = $request->validated();
 
             if ($request->hasFile('image_path')) {
-                $imagePath = $request->file('image_path')->store('listings', 'public');
+                $imagePath = $request->file('image_path')->store('', 'public');
                 $data['image_path'] = $imagePath;
             }
 
             Listing::create($data);
-            return redirect()->route('admin.listings.index')->with('success', 'Smeštaj uspešno napravljen.');
+            return redirect()->route('admin.listings.index')->with('modal', [
+                'message' => 'Smeštaj uspešno napravljen.',
+                'type' => 'success'
+            ]);
         } catch (Exception) {
-            return redirect()->back()->with('error', 'Greška pri kreiranju smeštaja.');
+            return redirect()->back()->with('modal', [
+                'message' => 'Greška pri kreiranju smeštaja.',
+                'type' => 'error'
+            ]);
         }
     }
 
     public function show(string $id, ShowListingRequest $request)
     {
-        $listing = Listing::with('reviews')->find($id);
+        try {
+            if (!is_numeric($id)) {
+                return redirect()->back()->with('modal', [
+                    'message' => 'Nevažeći smeštaj.',
+                    'type' => 'error'
+                ]);
+            }
 
-        $start_date = $request->start_date;
-        $end_date = $request->end_date;
+            $listing = Listing::with('reviews')->find($id);
 
-        return view('listings.show', compact('listing', 'start_date', 'end_date'));
+            if (!$listing) {
+                return redirect()->back()->with('modal', [
+                    'message' => 'Smeštaj nije pronađen.',
+                    'type' => 'error'
+                ]);
+            }
+
+            $start_date = $request->start_date;
+            $end_date = $request->end_date;
+
+            return view('listings.show', compact('listing', 'start_date', 'end_date'));
+        } catch (Exception $e) {
+            return redirect()->back()->with('modal', [
+                'message' => 'Greška pri učitavanju smeštaja.',
+                'type' => 'error'
+            ]);
+        }
     }
 
     public function edit(string $id)
@@ -79,7 +116,10 @@ class ListingController extends Controller
             $cities = City::all();
             return view('admin.listings.edit', compact('listing', 'cities'));
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Greška pri otvaranju forme za izmenu.');
+            return redirect()->back()->with('modal', [
+                'message' => 'Greška pri otvaranju forme za izmenu.',
+                'type' => 'error'
+            ]);
         }
     }
 
@@ -95,13 +135,18 @@ class ListingController extends Controller
             }
 
             //Cuvaj novu
-            $path = $request->file('image_path')->store('listings', 'public');
+            Log::info('Path of old image: ' . $listing->image_path);
+            $path = $request->file('image_path')->store( '', 'public');
+            Log::info('New image stored at: ' . $path);
             $data['image_path'] = $path;
         }
 
         $listing->update($data);
 
-        return redirect()->route('admin.listings.index')->with('success', 'Smeštaj uspešno izmenjen.');
+        return redirect()->route('admin.listings.index')->with('modal', [
+            'message' => 'Smeštaj uspešno izmenjen.',
+            'type' => 'success'
+        ]);
     }
 
 
@@ -109,9 +154,15 @@ class ListingController extends Controller
     {
         try {
             Listing::findOrFail($id)->delete();
-            return redirect()->route('admin.listings.index')->with('success', 'Smeštaj obrisan.');
+            return redirect()->route('admin.listings.index')->with('modal', [
+                'message' => 'Smeštaj obrisan.',
+                'type' => 'success'
+            ]);
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Greška pri brisanju smeštaja.');
+            return redirect()->back()->with('modal', [
+                'message' => 'Greška pri brisanju smeštaja.',
+                'type' => 'error'
+            ]);
         }
     }
 
@@ -143,7 +194,10 @@ class ListingController extends Controller
             // User dio
             return view('dashboard', compact('listings', 'cities'));
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Greška pri pretrazi.');
+            return redirect()->back()->with('modal', [
+                'message' => 'Greška pri pretrazi.',
+                'type' => 'error'
+            ]);
         }
     }
 }

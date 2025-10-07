@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use App\Models\Listing;
 use App\Models\Reservation;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreReservationRequest;
 
@@ -36,18 +34,21 @@ class ReservationController extends Controller
         try {
 
             $overlap = Reservation::where('listing_id', $request->listing_id)
-                ->where(function($query) use ($request) {
+                ->where(function ($query) use ($request) {
                     $query->whereBetween('start_date', [$request->start_date, $request->end_date])
                         ->orWhereBetween('end_date', [$request->start_date, $request->end_date])
-                        ->orWhere(function($q) use ($request) {
+                        ->orWhere(function ($q) use ($request) {
                             $q->where('start_date', '<', $request->start_date)
-                              ->where('end_date', '>', $request->end_date);
+                                ->where('end_date', '>', $request->end_date);
                         });
                 })
                 ->exists();
 
-            if($overlap){
-                return back()->with('error', 'Datumi nisu dostupni');
+            if ($overlap) {
+                return back()->with('modal', [
+                    'message' => 'Datumi nisu dostupni',
+                    'type' => 'error'
+                ]);
             }
 
             Reservation::create([
@@ -59,11 +60,17 @@ class ReservationController extends Controller
 
             return redirect()
                 ->route('dashboard')
-                ->with('success', 'Rezervacija uspešno kreirana.');
+                ->with('modal', [
+                    'message' => 'Rezervacija uspešno kreirana.',
+                    'type' => 'success'
+                ]);
         } catch (\Exception $e) {
             return redirect()
                 ->back()
-                ->with('error', 'Greška pri kreiranju rezervacije: ' . $e->getMessage());
+                ->with('modal', [
+                    'message' => 'Greška pri kreiranju rezervacije: ' . $e->getMessage(),
+                    'type' => 'error'
+                ]);
         }
     }
 
@@ -72,12 +79,21 @@ class ReservationController extends Controller
         try {
             Reservation::findOrFail($id)->delete();
             if (Auth::user()->role == 'admin') {
-                return redirect()->route('admin.reservations.index')->with('success', 'Rezervacija je obrisana');
+                return redirect()->route('admin.reservations.index')->with('modal', [
+                    'message' => 'Rezervacija je obrisana',
+                    'type' => 'success'
+                ]);
             } elseif (Auth::user()->role == 'user') {
-                return redirect()->route('reservations.index')->with('success', 'Rezervacije obrisana.');
+                return redirect()->route('reservations.index')->with('modal', [
+                    'message' => 'Rezervacije obrisana.',
+                    'type' => 'success'
+                ]);
             }
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Greška pri brisanju rezervacije.');
+            return redirect()->back()->with('modal', [
+                'message' => 'Greška pri brisanju rezervacije.',
+                'type' => 'error'
+            ]);
         }
     }
 }
