@@ -13,7 +13,6 @@ class ListingSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('listings')->truncate();
 
         $listings = [
             [

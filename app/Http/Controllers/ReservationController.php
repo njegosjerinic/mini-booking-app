@@ -73,4 +73,22 @@ class ReservationController extends Controller
                 ]);
         }
     }
+
+    public function destroy(string $id)
+    {
+        try {
+            $reservation = Reservation::findOrFail($id);
+            $reservation->delete();
+
+            return redirect()->back()->with('modal', [
+                'message' => 'Rezervacija uspešno otkazana.',
+                'type' => 'success'
+            ]);
+        } catch (Exception $e) {
+            return redirect()->back()->with('modal', [
+                'message' => 'Greška pri otkazivanju rezervacije.',
+                'type' => 'error'
+            ]);
+        }
+    }
 }

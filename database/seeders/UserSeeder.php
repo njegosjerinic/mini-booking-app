@@ -10,7 +10,6 @@ class UserSeeder extends Seeder{
 
     public function run()
     {
-        DB::table('users')->truncate();
         
         User::create([
             'name' => 'Admin',

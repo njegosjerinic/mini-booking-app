@@ -30,10 +30,9 @@ class ReviewController extends Controller
         try {
             $reservation = Reservation::findOrFail($request->reservation_id);
 
-
             Review::create($request->all());
 
-            return redirect()->back()->with('modal', [
+            return redirect()->route('reservations.index')->with('modal', [
                 'message' => 'Recenzija je uspješno dodata',
                 'type' => 'success'
             ]);

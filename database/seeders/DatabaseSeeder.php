@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +14,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        DB::table('listings')->truncate();
+        DB::table('cities')->truncate();
+        DB::table('users')->truncate();
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         // Poziv svih ostalih seedera
         $this->call([
@@ -20,7 +28,5 @@ class DatabaseSeeder extends Seeder
             ListingSeeder::class,
             UserSeeder::class
         ]);
-
     }
 }
-
