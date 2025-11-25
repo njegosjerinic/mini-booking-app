@@ -22,7 +22,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 45.00,
                 'beds' => 2,
                 'max_persons' => 3,
-                'image_path' => 'apartman1.jpg',
+                'image_path' => '/listings/apartman1.jpg',
             ],
             [
                 'name' => 'Hotel Plaza',
@@ -31,7 +31,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 120.00,
                 'beds' => 1,
                 'max_persons' => 2,
-                'image_path' => 'hotel1.jpg',
+                'image_path' => '/listings/hotel1.jpg',
             ],
             [
                 'name' => 'Vila Raj',
@@ -40,7 +40,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 200.00,
                 'beds' => 4,
                 'max_persons' => 8,
-                'image_path' => 'villa1.jpg',
+                'image_path' => '/listings/villa1.jpg',
             ],
             [
                 'name' => 'Hostel Centar',
@@ -49,7 +49,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 15.00,
                 'beds' => 10,
                 'max_persons' => 10,
-                'image_path' => 'hostel1.jpg',
+                'image_path' => '/listings/hostel1.jpg',
             ],
             // Novi smeštaji
             [
@@ -59,7 +59,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 60.00,
                 'beds' => 2,
                 'max_persons' => 2,
-                'image_path' => 'hotel_green.jpg',
+                'image_path' => '/listings/hotel_green.jpg',
             ],
             [
                 'name' => 'Seosko domaćinstvo Etno',
@@ -68,7 +68,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 35.00,
                 'beds' => 3,
                 'max_persons' => 5,
-                'image_path' => 'etno_house.jpg',
+                'image_path' => '/listings/etno_house.jpg',
             ],
             [
                 'name' => 'Penthouse Panorama',
@@ -77,7 +77,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 150.00,
                 'beds' => 2,
                 'max_persons' => 4,
-                'image_path' => 'penthouse.jpg',
+                'image_path' => '/listings/penthouse.jpg',
             ],
             [
                 'name' => 'Planinska koliba Snežana',
@@ -86,7 +86,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 80.00,
                 'beds' => 3,
                 'max_persons' => 6,
-                'image_path' => 'cabin.jpg',
+                'image_path' => '/listings/cabin.jpg',
             ],
             [
                 'name' => 'Boutique Hotel Central',
@@ -95,7 +95,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 110.00,
                 'beds' => 1,
                 'max_persons' => 2,
-                'image_path' => 'boutique_hotel.jpg',
+                'image_path' => '/listings/boutique_hotel.jpg',
             ],
             [
                 'name' => 'Apartman Lux',
@@ -104,7 +104,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 90.00,
                 'beds' => 2,
                 'max_persons' => 4,
-                'image_path' => 'apartman_lux.jpg',
+                'image_path' => '/listings/apartman_lux.jpg',
             ],
             [
                 'name' => 'Kamp Sunny',
@@ -113,7 +113,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 10.00,
                 'beds' => 0,
                 'max_persons' => 20,
-                'image_path' => 'camp.jpg',
+                'image_path' => '/listings/camp.jpg',
             ],
             [
                 'name' => 'Studio Modern',
@@ -122,7 +122,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 40.00,
                 'beds' => 1,
                 'max_persons' => 2,
-                'image_path' => 'studio_modern.jpg',
+                'image_path' => '/listings/studio_modern.jpg',
             ],
             [
                 'name' => 'Resort Paradise',
@@ -131,7 +131,7 @@ class ListingSeeder extends Seeder
                 'price_per_night' => 250.00,
                 'beds' => 5,
                 'max_persons' => 12,
-                'image_path' => 'resort.jpg',
+                'image_path' => '/listings/resort.jpg',
             ],
         ];
 
