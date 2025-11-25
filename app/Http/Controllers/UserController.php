@@ -14,7 +14,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
+        $users = User::withCount('reservations')->get();
 
         return view('admin.users.index', compact('users'));
     }

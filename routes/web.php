@@ -23,7 +23,7 @@ Route::get('/', function () {
 });
 
 // pretraga smeštaja
-Route::get('/listings/search', [ListingController::class, 'search']);
+Route::get('/listings/search', [ListingController::class, 'search'])->name('listings.search');
 
 Route::get('/listings/{id}', [ListingController::class, 'show'])->name('listings.show');
 
@@ -103,6 +103,8 @@ Route::middleware(['auth', 'role:admin', 'prevent-back-history'])
         Route::get('reviews/{review}', function () {
             abort(404);
         })->where('review', '[0-9A-Za-z-_]+');
+
+        Route::get('reviews/search', [ReviewController::class, 'search'])->name('reviews.search');
     });
 
 

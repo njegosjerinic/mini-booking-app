@@ -48,4 +48,10 @@ class ReviewController extends Controller
             return redirect()->back()->with('error', 'Neuspješno brisanje recenzije: ' . $e->getMessage());
         }
     }
+
+    public function search(SearchReviewRequest $request){
+        try{
+            
+        }
+    }
 }

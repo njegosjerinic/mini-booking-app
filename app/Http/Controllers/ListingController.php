@@ -20,7 +20,7 @@ class ListingController extends Controller
     {
         try {
             $user = Auth::user();
-            $listings = Listing::all();
+            $listings = Listing::withCount('reservations')->get();
             $cities = City::all();
 
             if ($user->role === 'user') {
