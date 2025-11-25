@@ -8,7 +8,11 @@
 
     <!-- Bootstrap CSS (CDN) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 </head>
 
@@ -16,19 +20,6 @@
 
     @include('partials.header')
 
-    <div>
-        @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-        @endif
-
-        @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-        @endif
-    </div>
 
     <div id="modal" class="modal fade">
         <div class="modal-dialog modal-dialog-centered">
@@ -42,11 +33,11 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zatvori</button>
+                    <button type="submit" id="confirm-delete-btn" class="btn btn-danger d-none">Obrisi</button>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
         let modalInstance = null;
 
@@ -58,13 +49,16 @@
                 const {
                     message,
                     type,
-                    hideFooter = false
+                    hideFooter = false,
+                    confirmAction = null
                 } = event.detail;
 
                 const modalBody = document.getElementById('modal-body');
-                modalBody.innerHTML = message;
-
                 const modalHeader = modalElement.querySelector('.modal-header');
+                const modalFooter = modalElement.querySelector('.modal-footer');
+                const confirmBtn = document.getElementById('confirm-delete-btn');
+
+                modalBody.innerHTML = message;
                 modalHeader.className = 'modal-header';
 
                 switch (type) {
@@ -79,12 +73,21 @@
                         break;
                 }
 
-                const modalFooter = document.querySelector('.modal-footer');
-
                 if (hideFooter) {
                     modalFooter.style.display = 'none';
                 } else {
                     modalFooter.style.display = 'flex';
+                }
+
+                if (confirmAction) {
+                    confirmBtn.classList.remove('d-none');
+                    confirmBtn.onclick = function() {
+                        confirmAction();
+                        modalInstance.hide();
+                    };
+                } else {
+                    confirmBtn.classList.add('d-none');
+                    confirmBtn.onclick = null;
                 }
 
                 modalInstance.show();
@@ -96,31 +99,131 @@
                 detail: options
             }));
         }
-    </script>
 
-    @if(session('modal'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        function confirmDelete(id){
+            toastr.clear();
+            toastr.options.timeOut = 0;
+            toastr.options.preventDuplicates = true;
+
             showModal({
-                message: "{{ session('modal.message') }}",
-                type: "{{ session('modal.type') }}",
-            });
-        });
-    </script>
-    @endif
+                message: "Da li ste sigurni da zelite obrisati ovaj grad ",
+                type: "warning",
+                confirmAction: ()=>{
+                    console.log(document.getElementById(`delete-form-${id}`))
+                    document.getElementById(`delete-form-${id}`).submit();
+                }
+            })
+        }
 
+        function confirmDeleteListing(id){
+            toastr.clear();
+            toastr.options.timeOut = 0;
+            toastr.options.preventDuplicates = true;
+            
+            showModal({
+                message: "Da li ste sigurni da želite obrisati ovaj smještaj?",
+                type: "warning",
+                confirmAction: ()=>{
+                    document.getElementById(`delete-listing-form-${id}`).submit();
+                }
+            })
+        }
+
+        function confirmDeleteReservation(id){
+            toastr.clear();
+            toastr.options.timeOut = 0;
+            toastr.options.preventDuplicates = true;
+
+            showModal({
+                message: "Da li ste sigurni da želite obrisati ovu rezervaciju?",
+                type: "warning",
+                confirmAction: ()=>{
+                    document.getElementById(`delete-reservation-form-${id}`).submit();
+                }
+            })
+        }
+
+        function confirmDeleteReview(id){
+            toastr.clear();
+            toastr.options.timeOut = 0;
+            toastr.options.preventDuplicates = true;
+
+            showModal({
+                message: "Da li ste sigurni da želite obrisati ovu recenziju?",
+                type: "warning",
+                confirmAction: ()=>{
+                    document.getElementById(`delete-review-form-${id}`).submit();
+                }
+            })
+        }
+        
+        function confirmDeleteUser(id){
+            toastr.clear();
+            toastr.options.timeOut = 0;
+            toastr.options.preventDuplicates = true;
+
+            showModal({
+                message: "Da li ste sigurni da želite obrisati ovog korisnika?",
+                type: "warning",
+                confirmAction: ()=>{
+                    document.getElementById(`delete-user-form-${id}`).submit();
+                }
+            })
+        }
+    </script>
     <main class="container mt-4">
         @yield('content')
     </main>
-    <script src="{{ asset('js/custom.js') }}"></script>
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+
+
     <script>
-        window.onpageshow = function(event) {
-            if (event.persisted) {
-                window.location.reload();
-            }
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "100",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "show",
+            "hideMethod": "hide"
         };
     </script>
+
+    <!-- Tvoj custom JS -->
+    <script src="{{ asset('js/custom.js') }}"></script>
+
+    <script>
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+        @if (session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
+
+        @if (session('warning'))
+            toastr.warning("{{ session('warning') }}");
+        @endif
+
+        @if (session('info'))
+            toastr.info("{{ session('info') }}");
+        @endif
+    </script>
+
+
 </body>
 
 </html>

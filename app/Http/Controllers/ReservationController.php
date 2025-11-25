@@ -45,10 +45,7 @@ class ReservationController extends Controller
                 ->exists();
 
             if ($overlap) {
-                return back()->with('modal', [
-                    'message' => 'Datumi nisu dostupni',
-                    'type' => 'error'
-                ]);
+                return back()->with('error','Datumi nisu dostupni');
             }
 
             Reservation::create([
@@ -60,17 +57,11 @@ class ReservationController extends Controller
 
             return redirect()
                 ->route('dashboard')
-                ->with('modal', [
-                    'message' => 'Rezervacija uspešno kreirana.',
-                    'type' => 'success'
-                ]);
+                ->with('success', 'Rezervacija uspešno kreirana.');
         } catch (\Exception $e) {
             return redirect()
                 ->back()
-                ->with('modal', [
-                    'message' => 'Greška pri kreiranju rezervacije: ' . $e->getMessage(),
-                    'type' => 'error'
-                ]);
+                ->with('error', 'Greška pri kreiranju rezervacije: ' . $e->getMessage());
         }
     }
 
@@ -80,15 +71,9 @@ class ReservationController extends Controller
             $reservation = Reservation::findOrFail($id);
             $reservation->delete();
 
-            return redirect()->back()->with('modal', [
-                'message' => 'Rezervacija uspešno otkazana.',
-                'type' => 'success'
-            ]);
+            return redirect()->back()->with('success', 'Rezervacija uspešno otkazana.');
         } catch (Exception $e) {
-            return redirect()->back()->with('modal', [
-                'message' => 'Greška pri otkazivanju rezervacije.',
-                'type' => 'error'
-            ]);
+            return redirect()->back()->with('error', 'Greška pri otkazivanju rezervacije: ' . $e->getMessage());
         }
     }
 }

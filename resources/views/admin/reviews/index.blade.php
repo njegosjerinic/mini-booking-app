@@ -25,10 +25,10 @@
                                     <span class="badge bg-warning text-dark">{{ $review->rating }}/5</span>
                                 </div>
                                 <div class="col-md-4 text-end">
-                                    <form action="{{ route('admin.reviews.destroy', $review->id) }}" method="POST" style="display:inline;">
+                                    <form id="delete-review-form-{{ $review->id }}" action="{{ route('admin.reviews.destroy', $review->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">Obriši</button>
+                                        <button type="button" onclick="confirmDeleteReview({{ $review->id }})" class="btn btn-sm btn-danger">Obriši</button>
                                     </form>
                                 </div>
                             </div>

@@ -12,8 +12,14 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <h5>{{ $reservation->listing->name }}</h5>
+                            <p>Rezervisano od korisnika: {{ $reservation->user->name }}</p>
                             <p>{{ $reservation->start_date }}</p>
                             <p>{{ $reservation->end_date }}</p>
+                            <form id="delete-reservation-form-{{ $reservation->id }}" action="{{ route('admin.reservations.destroy', $reservation->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" onclick="confirmDeleteReservation({{ $reservation->id }})" class="btn btn-danger">Obriši rezervaciju</button>
+                            </form>
                         </div>
                     </div>
                 </div>

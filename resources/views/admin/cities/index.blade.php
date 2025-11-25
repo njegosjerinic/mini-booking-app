@@ -20,11 +20,12 @@
                         <td>
                             <a href="{{ route('admin.cities.edit', $city->id) }}" class="btn btn-warning btn-sm">Izmjeni</a>
 
-                            <form action="{{ route('admin.cities.destroy', $city->id) }}" method="POST"
+                            <form id="delete-form-{{ $city->id }}"
+                                action="{{ route('admin.cities.destroy', $city->id) }}" method="POST"
                                 style="display:inline-block;">
                                 @csrf
                                 @method('DELETE')
-                                <button onclick="confirm('Da li stvarno zelis obrisati grad')" type="submit"
+                                <button onclick="confirmDelete({{ $city->id }})" type="button"
                                     class="btn btn-danger btn-sm">Obriši</button>
                             </form>
                         </td>
