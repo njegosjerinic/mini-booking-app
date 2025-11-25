@@ -61,7 +61,7 @@ class ListingController extends Controller
             $data = $request->validated();
 
             if ($request->hasFile('image_path')) {
-                $imagePath = $request->file('image_path')->store('', 'public');
+                $imagePath = $request->file('image_path')->store('', 'public/');
                 $data['image_path'] = $imagePath;
             }
 
@@ -70,11 +70,8 @@ class ListingController extends Controller
                 'message' => 'Smeštaj uspešno napravljen.',
                 'type' => 'success'
             ]);
-        } catch (Exception) {
-            return redirect()->back()->with('modal', [
-                'message' => 'Greška pri kreiranju smeštaja.',
-                'type' => 'error'
-            ]);
+        } catch (Exception $e) {
+            Log::alert($e);
         }
     }
 
