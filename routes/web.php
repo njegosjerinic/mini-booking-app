@@ -73,9 +73,6 @@ Route::middleware(['auth', 'role:admin', 'prevent-back-history'])
         // gradovi
         Route::resource('cities', CityController::class);
 
-        Route::get('cities/{city}', function () {
-            abort(404);
-        })->where('city', '[0-9A-Za-z-_]+');
 
         // korisnici
         Route::resource('users', UserController::class);

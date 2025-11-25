@@ -10,7 +10,7 @@ class UpdateCityRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:cities,name,' . $this->city->id,
+            'name' => ['required', 'string', 'max:255', 'unique:cities,name,' . $this->id],
         ];
     }
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreReviewRequest;
-
+use App\Models\Listing;
 use Exception;
 use App\Models\Review;
 
@@ -13,7 +13,7 @@ class ReviewController extends Controller
 {
     public function index()
     {
-        $reviews = Review::all();
+        $reviews = Review::with(['user', 'listing'])->get();
 
         return view('admin.reviews.index', compact('reviews'));
     }
@@ -32,15 +32,9 @@ class ReviewController extends Controller
 
             Review::create($request->all());
 
-            return redirect()->route('reservations.index')->with('modal', [
-                'message' => 'Recenzija je uspješno dodata',
-                'type' => 'success'
-            ]);
+            return redirect()->route('reservations.index')->with('success', 'Recenzija je uspješno dodata');
         } catch (Exception $e) {
-            return redirect()->back()->with('modal', [
-                'message' => 'Recenzija nije uspješno dodata',
-                'type' => 'error'
-            ]);
+            return redirect()->back()->with('error', 'Recenzija nije uspješno dodata: ' . $e->getMessage());
         }
     }
 
@@ -49,15 +43,9 @@ class ReviewController extends Controller
         try {
             $review->delete();
 
-            return redirect()->back()->with('modal', [
-                'message' => 'Recenzija je uspješno obrisana.',
-                'type' => 'success'
-            ]);
+            return redirect()->back()->with('success', 'Recenzija je uspješno obrisana.');
         } catch (Exception $e) {
-            return redirect()->back()->with('modal', [
-                'message' => 'Neuspješno brisanje recenzije.',
-                'type' => 'error'
-            ]);
+            return redirect()->back()->with('error', 'Neuspješno brisanje recenzije: ' . $e->getMessage());
         }
     }
 }

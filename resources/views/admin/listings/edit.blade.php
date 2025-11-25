@@ -68,11 +68,11 @@
 
         </form>
 
-        <form action="{{ route('admin.listings.destroy', $listing->id) }}" method="POST" class="mt-3">
+        <form id="delete-listing-form-{{ $listing->id }}" action="{{ route('admin.listings.destroy', $listing->id) }}" method="POST" class="mt-3">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-danger"
-                onclick="return confirm('Da li ste sigurni da želite obrisati ovaj smještaj?')">
+            <button type="button" class="btn btn-danger"
+                onclick="confirmDeleteListing({{ $listing->id }})">
                 Obriši smještaj
             </button>
         </form>
