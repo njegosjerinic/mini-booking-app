@@ -10,13 +10,14 @@
             <thead>
                 <tr>
                     <th>Naziv</th>
-                    <th>Akcije</th>
+                    <th>Smjestaja</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($cities as $city)
                     <tr>
                         <td>{{ $city->name }}</td>
+                        <td>{{ $numberOfListings[$city->id] ?? 0 }}</td>
                         <td>
                             <a href="{{ route('admin.cities.edit', $city->id) }}" class="btn btn-warning btn-sm">Izmjeni</a>
 
