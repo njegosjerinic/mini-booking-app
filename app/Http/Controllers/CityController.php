@@ -16,7 +16,10 @@ class CityController extends Controller
     public function index()
     {
         $cities = City::all();
-        return view('admin.cities.index', compact('cities'));
+        $numberOfListings = $cities->mapWithKeys(function ($city) {
+            return [$city->id => $city->listings()->count()];
+        });
+        return view('admin.cities.index', compact('cities', 'numberOfListings'));
     }
 
     // Forma za dodavanje novog grada
