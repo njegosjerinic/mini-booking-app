@@ -29,15 +29,9 @@ class ListingController extends Controller
                 return view('admin.listings.index', compact('listings', 'cities'));
             }
 
-            return redirect()->back()->with('modal', [
-                'message' => 'Nepoznata rola.',
-                'type' => 'error'
-            ]);
+
         } catch (Exception $e) {
-            return redirect()->back()->with('modal', [
-                'message' => 'Došlo je do greške pri učitavanju.',
-                'type' => 'error'
-            ]);
+            return redirect()->back()->with('error', 'Došlo je do greške pri učitavanju.');
         }
     }
 
@@ -47,10 +41,7 @@ class ListingController extends Controller
             $cities = City::all();
             return view('admin.listings.create', compact('cities'));
         } catch (Exception $e) {
-            return redirect()->back()->with('modal', [
-                'message' => 'Ne mogu učitati formu za kreiranje.',
-                'type' => 'error'
-            ]);
+            return redirect()->back()->with('error', 'Ne mogu učitati formu za kreiranje.');
         }
     }
 
@@ -66,15 +57,9 @@ class ListingController extends Controller
             }
 
             Listing::create($data);
-            return redirect()->route('admin.listings.index')->with('modal', [
-                'message' => 'Smeštaj uspešno napravljen.',
-                'type' => 'success'
-            ]);
+            return redirect()->route('admin.listings.index')->with('success','Smeštaj uspešno napravljen.');
         } catch (Exception) {
-            return redirect()->back()->with('modal', [
-                'message' => 'Greška pri kreiranju smeštaja.',
-                'type' => 'error'
-            ]);
+            return redirect()->back()->with('error', 'Greška pri kreiranju smeštaja.');
         }
     }
 
@@ -82,19 +67,13 @@ class ListingController extends Controller
     {
         try {
             if (!is_numeric($id)) {
-                return redirect()->back()->with('modal', [
-                    'message' => 'Nevažeći smeštaj.',
-                    'type' => 'error'
-                ]);
+                return redirect()->back()->with('error','Nevazici smestaj.' );
             }
 
             $listing = Listing::with('reviews')->find($id);
 
             if (!$listing) {
-                return redirect()->back()->with('modal', [
-                    'message' => 'Smeštaj nije pronađen.',
-                    'type' => 'error'
-                ]);
+                return redirect()->back()->with('error', 'Smeštaj nije pronađen.');
             }
 
             $start_date = $request->start_date;
@@ -102,10 +81,7 @@ class ListingController extends Controller
 
             return view('listings.show', compact('listing', 'start_date', 'end_date'));
         } catch (Exception $e) {
-            return redirect()->back()->with('modal', [
-                'message' => 'Greška pri učitavanju smeštaja.',
-                'type' => 'error'
-            ]);
+            return redirect()->back()->with('error','Greska pri ucitavanju smestaja.' );
         }
     }
 
@@ -116,10 +92,7 @@ class ListingController extends Controller
             $cities = City::all();
             return view('admin.listings.edit', compact('listing', 'cities'));
         } catch (Exception $e) {
-            return redirect()->back()->with('modal', [
-                'message' => 'Greška pri otvaranju forme za izmenu.',
-                'type' => 'error'
-            ]);
+            return redirect()->back()->with('error','Greška pri otvaranju forme za izmenu.' );
         }
     }
 
@@ -143,10 +116,7 @@ class ListingController extends Controller
 
         $listing->update($data);
 
-        return redirect()->route('admin.listings.index')->with('modal', [
-            'message' => 'Smeštaj uspešno izmenjen.',
-            'type' => 'success'
-        ]);
+        return redirect()->route('admin.listings.index')->with('success', 'Smeštaj uspešno izmenjen.');
     }
 
 
@@ -161,18 +131,14 @@ class ListingController extends Controller
 
             $listing->reservations()->delete();
 
+            $listing->reviews()->delete();
+
             $listing->delete();
             
-            return redirect()->route('admin.listings.index')->with('modal', [
-                'message' => 'Smeštaj obrisan.',
-                'type' => 'success'
-            ]);
+            return redirect()->route('admin.listings.index')->with('success','Smeštaj obrisan.');
         } catch (Exception $e) {
             Log::error('Error deleting listing: ' . $e->getMessage());
-            return redirect()->back()->with('modal', [
-                'message' => 'Greška pri brisanju smeštaja.',
-                'type' => 'error'
-            ]);
+            return redirect()->back()->with('modal', 'Greška pri brisanju smeštaja.');
         }
     }
 
@@ -204,10 +170,7 @@ class ListingController extends Controller
             // User dio
             return view('dashboard', compact('listings', 'cities'));
         } catch (Exception $e) {
-            return redirect()->back()->with('modal', [
-                'message' => 'Greška pri pretrazi.',
-                'type' => 'error'
-            ]);
+            return redirect()->back()->with('modal','Greška pri pretrazi.');
         }
     }
 }

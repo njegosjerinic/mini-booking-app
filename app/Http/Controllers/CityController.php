@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\City;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\UpdateCityRequest;
 use App\Http\Requests\StoreCityRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -29,49 +30,36 @@ class CityController extends Controller
     {
         try {
             City::create($request->validated());
-            return redirect()->route('admin.cities.index')->with('modal', [
-            'message' => 'Grad uspjesno napravljen',
-            'type' => 'success'
-        ]);
+            return redirect()->route('admin.cities.index')->with('success', 'Grad uspjesno napravljen');
         } catch (Exception $e) {
-            return redirect()->back()->with('modal', [
-            'message' => 'Greška pri čuvanju grada',
-            'type' => 'error'
-            ]);
+            return redirect()->back()->with('error', 'Greška pri čuvanju grada');
         }
     }
 
 
     // Forma za editovanje postojećeg grada
-    public function edit(string $id)
+    public function edit($id)
     {
         try {
             $city = City::findOrFail($id);
             return view('admin.cities.edit', compact('city'));
         } catch (ModelNotFoundException $e) {
-            return redirect()->back()->with('modal', [
-            'message' => 'Greška pri čuvanju grada',
-            'type' => 'error'
-            ]);
+            return redirect()->back()->with('error', 'Greška pri čuvanju grada');
         }
     }
 
     // Update postojećeg grada
-    public function update(UpdateCityRequest $request, string $id)
+    public function update(UpdateCityRequest $request,City $city)
     {
         try {
-            $city = City::findOrFail($id);
+
+            $city = City::findOrFail($city->id);
+
             $city->update($request->validated());
 
-            return redirect()->route('admin.cities.index')->with('modal', [
-                'message' => 'Grad uspjesno izmjenjen',
-                'type' => 'success'
-            ]);
+            return redirect()->route('admin.cities.index')->with('success', 'Grad uspjesno izmjenjen');
         } catch (ModelNotFoundException $e) {
-            return redirect()->back()->with('modal', [
-            'message' => 'Greška pri čuvanju grada',
-            'type' => 'error'
-            ]);
+            return redirect()->back()->with('error', 'Greška pri čuvanju grada');
         }
     }
 
@@ -81,24 +69,18 @@ class CityController extends Controller
         try {
             $city = City::findOrFail($id);
 
-            if ($city->listings()->exists() || $city->reservations()->exists()) {
-                return redirect()->back()->with('modal', [
-            'message' => 'Greška pri čuvanju grada',
-            'type' => 'error'
-            ]);
+            if ($city->listings()->exists()) {
+                return redirect()->back()->with('error', 'Grad ima povezane smeštaje i ne može biti obrisan.');
             }
 
             $city->delete();
 
-            return redirect()->back()->with('modal', [
-            'message' => 'Grad obrisan uspjesno',
-            'type' => 'success'
-            ]);
+            return redirect()->back()->with('success', 'Grad obrisan uspjesno');
         } catch (Exception $e) {
-            return redirect()->back()->with('modal', [
-            'message' => 'Greška pri čuvanju grada',
-            'type' => 'error'
-            ]);
+
+            Log::error('Error deleting city: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Greška pri brisanju grada');
         }
     }
 }
