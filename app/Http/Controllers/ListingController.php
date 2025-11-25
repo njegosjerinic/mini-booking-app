@@ -52,23 +52,15 @@ class ListingController extends Controller
             $data = $request->validated();
 
             if ($request->hasFile('image_path')) {
-                $imagePath = $request->file('image_path')->store('', 'public/');
+                $imagePath = $request->file('image_path')->store('listings', 'public');
                 $data['image_path'] = $imagePath;
             }
 
             Listing::create($data);
-<<<<<<< HEAD
-            return redirect()->route('admin.listings.index')->with('modal', [
-                'message' => 'Smeštaj uspešno napravljen.',
-                'type' => 'success'
-            ]);
+            return redirect()->route('admin.listings.index')->with('success','Smeštaj uspešno napravljen.');
         } catch (Exception $e) {
             Log::alert($e);
-=======
-            return redirect()->route('admin.listings.index')->with('success','Smeštaj uspešno napravljen.');
-        } catch (Exception) {
             return redirect()->back()->with('error', 'Greška pri kreiranju smeštaja.');
->>>>>>> 0bade49120b2a1f9d81c33954ac2cc24b47a0fb4
         }
     }
 
