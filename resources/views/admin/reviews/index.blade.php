@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-        <form action="{{ route(admin.review.search) }}" method="GET" class="row g-3 mb-4 align-items-end justify-content-between review-form">
+        <form action="{{ route('admin.reviews.search') }}" method="GET" class="row g-3 mb-4 align-items-end justify-content-between review-form">
             <div class="col-mb-3">
                 <label for="listing">Smjestaj</label>
-                <input type="text" name="listing" id="listing" class="form-control" value="{{ request('listing') }}">
-                <div id="suggestion-box"></div>
+                <input type="text" name="listing" id="searchListing" class="form-control" value="{{ request('listing') }}">
+                <div id="suggestion-box"></div> 
             </div>
         </form>
 

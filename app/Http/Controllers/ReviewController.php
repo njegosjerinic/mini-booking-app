@@ -52,6 +52,8 @@ class ReviewController extends Controller
     public function search(SearchReviewRequest $request){
         try{
             
+        }catch(Exception $e){
+
         }
     }
 }
