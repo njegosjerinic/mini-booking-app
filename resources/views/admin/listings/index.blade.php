@@ -59,9 +59,9 @@
                                 <div class="card-body">
                                     <h5>{{ $listing->name }}</h5>
                                     <p>{{ $listing->city->name ?? 'Nepoznato' }}</p>
-
                                     <p><b>{{ $listing->price_per_night }} €</b> / noć</p>
                                     <p>{{ $listing->beds }} kreveta, max {{ $listing->max_persons }} osoba</p>
+                                    <p>Rezervacije: {{ $listing->reservations_count }}</p>
 
                                     <a href="{{ route('admin.listings.edit', $listing->id) }}"
                                         class="btn btn-sm btn-primary">

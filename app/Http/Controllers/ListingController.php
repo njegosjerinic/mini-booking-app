@@ -10,6 +10,7 @@ use App\Http\Requests\ShowListingRequest;
 use App\Http\Requests\StoreListingRequest;
 use App\Http\Requests\UpdateListingRequest;
 use App\Http\Requests\SearchListingRequest;
+use Inertia\Inertia;
 
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -20,15 +21,16 @@ class ListingController extends Controller
     {
         try {
             $user = Auth::user();
-            $listings = Listing::all();
+            $listings = Listing::withCount('reservations')->get();
             $cities = City::all();
 
             if ($user->role === 'user') {
-                return view('dashboard', compact('listings', 'cities'));
-            } elseif ($user->role === 'admin') {
-                return view('admin.listings.index', compact('listings', 'cities'));
+                return Inertia::render('Dashboard', compact('listings', 'cities'));
             }
 
+            if ($user->role === 'admin') {
+                return Inertia::render('Listings/Index', compact('listings', 'cities'));
+            }
 
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Došlo je do greške pri učitavanju.');
@@ -57,7 +59,7 @@ class ListingController extends Controller
             }
 
             Listing::create($data);
-            return redirect()->route('admin.listings.index')->with('success','Smeštaj uspešno napravljen.');
+            return redirect()->route('admin.listings.index')->with('success', 'Smeštaj uspešno napravljen.');
         } catch (Exception $e) {
             Log::alert($e);
             return redirect()->back()->with('error', 'Greška pri kreiranju smeštaja.');
@@ -68,7 +70,7 @@ class ListingController extends Controller
     {
         try {
             if (!is_numeric($id)) {
-                return redirect()->back()->with('error','Nevazici smestaj.' );
+                return redirect()->back()->with('error', 'Nevazici smestaj.');
             }
 
             $listing = Listing::with('reviews')->find($id);
@@ -82,7 +84,7 @@ class ListingController extends Controller
 
             return view('listings.show', compact('listing', 'start_date', 'end_date'));
         } catch (Exception $e) {
-            return redirect()->back()->with('error','Greska pri ucitavanju smestaja.' );
+            return redirect()->back()->with('error', 'Greska pri ucitavanju smestaja.');
         }
     }
 
@@ -93,7 +95,7 @@ class ListingController extends Controller
             $cities = City::all();
             return view('admin.listings.edit', compact('listing', 'cities'));
         } catch (Exception $e) {
-            return redirect()->back()->with('error','Greška pri otvaranju forme za izmenu.' );
+            return redirect()->back()->with('error', 'Greška pri otvaranju forme za izmenu.');
         }
     }
 
@@ -110,7 +112,7 @@ class ListingController extends Controller
 
             //Cuvaj novu
             Log::info('Path of old image: ' . $listing->image_path);
-            $path = $request->file('image_path')->store( '', 'public');
+            $path = $request->file('image_path')->store('', 'public');
             Log::info('New image stored at: ' . $path);
             $data['image_path'] = $path;
         }
@@ -135,8 +137,8 @@ class ListingController extends Controller
             $listing->reviews()->delete();
 
             $listing->delete();
-            
-            return redirect()->route('admin.listings.index')->with('success','Smeštaj obrisan.');
+
+            return redirect()->route('admin.listings.index')->with('success', 'Smeštaj obrisan.');
         } catch (Exception $e) {
             Log::error('Error deleting listing: ' . $e->getMessage());
             return redirect()->back()->with('modal', 'Greška pri brisanju smeštaja.');
@@ -171,7 +173,7 @@ class ListingController extends Controller
             // User dio
             return view('dashboard', compact('listings', 'cities'));
         } catch (Exception $e) {
-            return redirect()->back()->with('modal','Greška pri pretrazi.');
+            return redirect()->back()->with('modal', 'Greška pri pretrazi.');
         }
     }
 }

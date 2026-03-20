@@ -11,7 +11,8 @@
                     <th>Ime</th>
                     <th>Email</th>
                     <th>Uloga</th>
-                    <th>Akcije</th>
+                    <th>Datum registracije</th>
+                    <th>Rezervacije</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,6 +22,13 @@
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->role }}</td>
+                        <td>{{ $user->created_at }}</td>
+                        @if($user->role !== 'admin'){
+                        <td>{{ $user->reservations_count }}</td>
+                        }@else{
+                        <td>-</td>
+                        }
+                        @endif
                         <td>
                             <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-primary">edit</a>
                             @if ($user->role !== 'admin')

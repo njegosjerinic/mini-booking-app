@@ -13,6 +13,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    @viteReactRefresh
+@vite('resources/js/app.jsx')
+@inertiaHead
+
 </head>
 
 <body>
@@ -171,7 +175,7 @@
         }
     </script>
     <main class="container mt-4">
-        @yield('content')
+        @inertia
     </main>
 
     <!-- Bootstrap JS -->
