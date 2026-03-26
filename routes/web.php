@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Listing;
+use App\Models\Reservation;
+use App\Models\Review;
+use App\Models\User;
 use App\Models\City;
 use Inertia\Inertia;
 
@@ -15,11 +18,9 @@ use App\Http\Controllers\ReservationController;
 
 // public rute
 Route::get('/', function () {
-    $listings = Listing::with('city')->get();
-    $cities = City::all(); // dodato da forma radi
-    return view('welcome', [
-        'listings' => $listings,
-        'cities' => $cities
+    return Inertia::render('Welcome', [
+        'listings' => Listing::with('city')->latest()->take(6)->get(),
+        'cities' => City::all(),
     ]);
 });
 
@@ -40,6 +41,9 @@ Route::middleware(['auth', 'role:user', 'prevent-back-history'])->group(function
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
+        ->name('profile.password.update');
 
     // umjesto postojeće GET rute dodaj name:
     Route::get('reservations/{reservation}/reviews/create', [ReviewController::class, 'create'])
@@ -68,7 +72,15 @@ Route::middleware(['auth', 'role:admin', 'prevent-back-history'])
     ->group(function () {
 
         Route::get('/dashboard', function () {
-            return view('admin.dashboard');
+            return Inertia::render('Admin/Dashboard', [
+                'stats' => [
+                    'users' => User::count(),
+                    'listings' => Listing::count(),
+                    'reservations' => Reservation::count(),
+                    'reviews' => Review::count(),
+                ],
+                'latestReservations' => Reservation::with('user', 'listing')->latest()->take(5)->get()
+            ]);
         })->name('dashboard');
 
         // gradovi

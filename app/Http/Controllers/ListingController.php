@@ -41,7 +41,7 @@ class ListingController extends Controller
     {
         try {
             $cities = City::all();
-            return view('admin.listings.create', compact('cities'));
+            return Inertia::render('Listings/Create', compact('cities'));
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Ne mogu učitati formu za kreiranje.');
         }
@@ -62,7 +62,7 @@ class ListingController extends Controller
             return redirect()->route('admin.listings.index')->with('success', 'Smeštaj uspešno napravljen.');
         } catch (Exception $e) {
             Log::alert($e);
-            return redirect()->back()->with('error', 'Greška pri kreiranju smeštaja.');
+            return redirect()->route('admin.listings.index')->with('error', 'Greška pri kreiranju smeštaja.');
         }
     }
 
@@ -82,7 +82,7 @@ class ListingController extends Controller
             $start_date = $request->start_date;
             $end_date = $request->end_date;
 
-            return view('listings.show', compact('listing', 'start_date', 'end_date'));
+            return Inertia::render('Listings/Show', compact('listing', 'start_date', 'end_date'));
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Greska pri ucitavanju smestaja.');
         }
@@ -93,7 +93,7 @@ class ListingController extends Controller
         try {
             $listing = Listing::findOrFail($id);
             $cities = City::all();
-            return view('admin.listings.edit', compact('listing', 'cities'));
+            return Inertia::render('Listings/Edit', compact('listing', 'cities'));
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Greška pri otvaranju forme za izmenu.');
         }
@@ -106,8 +106,8 @@ class ListingController extends Controller
         //Ako postoji nova slika
         if ($request->hasFile('image_path')) {
             //Obrisati staru ako postoji
-            if ($listing->image_path && \Storage::disk('public')->exists($listing->image_path)) {
-                \Storage::disk('public')->delete($listing->image_path);
+            if ($listing->image_path && Storage::disk('public')->exists($listing->image_path)) {
+                Storage::disk('public')->delete($listing->image_path);
             }
 
             //Cuvaj novu
@@ -140,8 +140,7 @@ class ListingController extends Controller
 
             return redirect()->route('admin.listings.index')->with('success', 'Smeštaj obrisan.');
         } catch (Exception $e) {
-            Log::error('Error deleting listing: ' . $e->getMessage());
-            return redirect()->back()->with('modal', 'Greška pri brisanju smeštaja.');
+            return redirect()->route('admin.listings.index')->with('modal', 'Greška pri brisanju smeštaja.');
         }
     }
 
@@ -167,11 +166,11 @@ class ListingController extends Controller
 
             // Admin dio
             if ($request->is('admin/*')) {
-                return view('admin.listings.index', compact('listings', 'cities'));
+                return Inertia::render('Listings/Index', compact('listings', 'cities'));
             }
 
             // User dio
-            return view('dashboard', compact('listings', 'cities'));
+            return Inertia::render('Listings/Index', compact('listings', 'cities'));
         } catch (Exception $e) {
             return redirect()->back()->with('modal', 'Greška pri pretrazi.');
         }
