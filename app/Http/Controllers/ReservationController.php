@@ -6,6 +6,10 @@ use Exception;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreReservationRequest;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
+
+use function Avifinfo\read;
 
 class ReservationController extends Controller
 {
@@ -15,16 +19,18 @@ class ReservationController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $user_id = Auth::user()->id;
-        $reservations = Reservation::query();
 
-        if ($user->role == 'user') {
-            $reservations = $reservations->where('user_id', $user_id)->with('listing')->get();
-            return view('reservations.index', compact('reservations'));
-        } else if ($user->role == 'admin') {
-            $admin_reservations = Reservation::all();
-            return view('admin.reservations.index', compact('admin_reservations'));
+        if ($user->role === 'admin') {
+            $reservations = Reservation::with('user', 'listing')->get();
+        } else {
+            $reservations = Reservation::where('user_id', $user->id)
+                ->with('listing')
+                ->get();
         }
+
+        return Inertia::render('Reservations/Index', [
+            'reservations' => $reservations
+        ]);
     }
 
 
@@ -45,14 +51,14 @@ class ReservationController extends Controller
                 ->exists();
 
             if ($overlap) {
-                return back()->with('error','Datumi nisu dostupni');
+                return back()->with('error', 'Datumi nisu dostupni');
             }
 
             Reservation::create([
                 'listing_id' => $request->listing_id,
-                'user_id'    => Auth::user()->id,
+                'user_id' => Auth::user()->id,
                 'start_date' => $request->start_date,
-                'end_date'   => $request->end_date,
+                'end_date' => $request->end_date,
             ]);
 
             return redirect()
@@ -65,15 +71,23 @@ class ReservationController extends Controller
         }
     }
 
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        try {
-            $reservation = Reservation::findOrFail($id);
-            $reservation->delete();
+        $reservation = Reservation::findOrFail($id);
 
-            return redirect()->back()->with('success', 'Rezervacija uspešno otkazana.');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Greška pri otkazivanju rezervacije: ' . $e->getMessage());
+        if (
+            auth()->user()->role !== 'admin' &&
+            $reservation->user_id !== auth()->id()
+        ) {
+            abort(403);
         }
+
+        $reservation->delete();
+
+        return Inertia::location(
+            auth()->user()->role === 'admin'
+            ? route('admin.reservations.index')
+            : route('reservations.index')
+        );
     }
 }

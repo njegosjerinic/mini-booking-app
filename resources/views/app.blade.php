@@ -21,9 +21,6 @@
 
 <body>
 
-    @include('partials.header')
-
-
     <div id="modal" class="modal fade">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -174,7 +171,7 @@
             })
         }
     </script>
-    <main class="container mt-4">
+    <main >
         @inertia
     </main>
 

@@ -1,11 +1,7 @@
-import { usePage } from "@inertiajs/react";
-import { router, Link } from "@inertiajs/react";
 import React from "react";
+import { router, Link } from "@inertiajs/react";
 
-export default function Index() {
-    const { listings, cities } = usePage().props;
-    console.log("react radi");
-
+export default function Welcome({ listings, cities }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -16,9 +12,10 @@ export default function Index() {
 
     return (
         <div className="container py-4">
+            {/* SEARCH FORM */}
             <form
                 onSubmit={handleSubmit}
-                className="row g-3 mb-4 align-items-end justify-content-between reservation-form"
+                className="row g-3 mb-4 align-items-end justify-content-between"
             >
                 <div className="col-md-3">
                     <label>Lokacija</label>
@@ -73,52 +70,49 @@ export default function Index() {
                 </div>
             </form>
 
+            {/* LISTINGS */}
             <div>
-                <h1>Lista smeštaja</h1>
+                <h1>Lista smještaja</h1>
 
                 {listings.length === 0 ? (
                     <p>Nema smeštaja trenutno.</p>
                 ) : (
                     <div className="row">
-                        {listings.map((listing) => (
-                            <div key={listing.id} className="col-md-4 mb-4">
+                        {listings.map((l) => (
+                            <div key={l.id} className="col-md-4 mb-4">
                                 <div className="card h-100">
-                                    {listing.image_path && (
+                                    {l.image_path && (
                                         <img
-                                            src={`/storage/${listing.image_path}`}
-                                            className="card-img-top object-fit-cover"
-                                            style={{ height: "200px" }}
+                                            src={`/storage/${l.image_path}`}
+                                            className="card-img-top"
+                                            style={{
+                                                height: "200px",
+                                                objectFit: "cover",
+                                            }}
                                             alt="slika"
                                         />
                                     )}
 
                                     <div className="card-body">
-                                        <h5>{listing.name}</h5>
+                                        <h5>{l.name}</h5>
                                         <p>
-                                            {listing.description?.substring(
-                                                0,
-                                                100,
-                                            )}
+                                            {l.description?.substring(0, 100)}
                                             ...
                                         </p>
                                         <p>
-                                            <b>Grad:</b> {listing.city?.name}
+                                            <b>Grad:</b> {l.city?.name}
                                         </p>
                                         <p>
-                                            <b>Cena:</b> €
-                                            {listing.price_per_night} / noć
-                                        </p>
-                                        <p>
-                                            <b>Broj osoba:</b>{" "}
-                                            {listing.max_persons}
+                                            <b>Cena:</b> €{l.price_per_night} /
+                                            noć
                                         </p>
 
-                                        <a
-                                            href={`/listings/${listing.id}`}
+                                        <Link
+                                            href={`/listings/${l.id}`}
                                             className="btn btn-sm btn-primary"
                                         >
                                             Detalji
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

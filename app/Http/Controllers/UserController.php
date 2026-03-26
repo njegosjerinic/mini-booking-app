@@ -8,6 +8,7 @@ use app\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
@@ -16,14 +17,14 @@ class UserController extends Controller
     {
         $users = User::withCount('reservations')->get();
 
-        return view('admin.users.index', compact('users'));
+        return Inertia::render('Users/Index', compact('users'));
     }
 
     public function edit(string $id)
     {
         try {
             $user = User::findOrFail($id);
-            return view('admin.users.edit', compact('user'));
+            return Inertia::render('Users/Edit', compact('user'));
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->with('error', 'Korisnik nije pronađen.');
         }

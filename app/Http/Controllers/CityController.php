@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Requests\UpdateCityRequest;
 use App\Http\Requests\StoreCityRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Inertia\Inertia;
 
 class CityController extends Controller
 {
@@ -16,13 +17,13 @@ class CityController extends Controller
     public function index()
     {
         $cities = City::withCount('listings')->get();
-        return view('admin.cities.index', compact('cities'));
+        return Inertia::render('Cities/Index', compact('cities'));
     }
 
     // Forma za dodavanje novog grada
     public function create()
     {
-        return view('admin.cities.create');
+        return Inertia::render('Cities/Create');
     }
 
     // Čuvanje novog grada
@@ -32,7 +33,7 @@ class CityController extends Controller
             City::create($request->validated());
             return redirect()->route('admin.cities.index')->with('success', 'Grad uspjesno napravljen');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Greška pri čuvanju grada');
+            return redirect()->route('admin.cities.index', [], 303)->with('error', 'Greška pri čuvanju grada');
         }
     }
 
@@ -42,14 +43,14 @@ class CityController extends Controller
     {
         try {
             $city = City::findOrFail($id);
-            return view('admin.cities.edit', compact('city'));
+            return Inertia::render('Cities/Edit', compact('city'));
         } catch (ModelNotFoundException $e) {
-            return redirect()->back()->with('error', 'Greška pri čuvanju grada');
+            return redirect()->route('admin.cities.index', [], 303)->with('error', 'Greška pri čuvanju grada');
         }
     }
 
     // Update postojećeg grada
-    public function update(UpdateCityRequest $request,City $city)
+    public function update(UpdateCityRequest $request, City $city)
     {
         try {
 
@@ -57,9 +58,9 @@ class CityController extends Controller
 
             $city->update($request->validated());
 
-            return redirect()->route('admin.cities.index')->with('success', 'Grad uspjesno izmjenjen');
+            return redirect()->route('admin.cities.index', [], 303)->with('success', 'Grad uspjesno izmjenjen');
         } catch (ModelNotFoundException $e) {
-            return redirect()->back()->with('error', 'Greška pri čuvanju grada');
+            return redirect()->route('admin.cities.index', [], 303)->with('error', 'Greška pri čuvanju grada');
         }
     }
 
@@ -70,12 +71,12 @@ class CityController extends Controller
             $city = City::findOrFail($id);
 
             if ($city->listings()->exists()) {
-                return redirect()->back()->with('error', 'Grad ima povezane smeštaje i ne može biti obrisan.');
+                return redirect()->route('admin.cities.index', [], 303)->with('error', 'Grad ima povezane smeštaje i ne može biti obrisan.');
             }
 
             $city->delete();
 
-            return redirect()->back()->with('success', 'Grad obrisan uspjesno');
+            return redirect()->route('admin.cities.index', [], 303)->with('success', 'Grad uspjesno obrisan');
         } catch (Exception $e) {
 
             Log::error('Error deleting city: ' . $e->getMessage());
