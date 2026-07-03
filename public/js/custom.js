@@ -1,33 +1,35 @@
-timeoutId = null;
+document.addEventListener("DOMContentLoaded", function () {
+    timeoutId = null;
 
-document.querySelectorAll(".reservation-form").forEach((form) => {
-    let startInput = form.querySelector(".start_date");
-    let endInput = form.querySelector(".end_date");
+    document.querySelectorAll(".reservation-form").forEach((form) => {
+        let startInput = form.querySelector(".start_date");
+        let endInput = form.querySelector(".end_date");
 
-    startInput.addEventListener("input", function () {
-        // Set the minimum allowed date for end_date
-        endInput.min = startInput.value;
+        startInput.addEventListener("input", function () {
+            // Set the minimum allowed date for end_date
+            endInput.min = startInput.value;
 
-        // If end_date is before start_date, reset it
-        if (endInput.value < startInput.value) {
-            endInput.value = startInput.value;
-        }
+            // If end_date is before start_date, reset it
+            if (endInput.value < startInput.value) {
+                endInput.value = startInput.value;
+            }
+        });
     });
+
+    document
+        .getElementById("searchListing")
+        .addEventListener("keyup", function () {
+            clearTimeout(timeoutId);
+            const query = this.value;
+
+            if (query.length > 2) {
+                timeoutId = setTimeout(() => {
+                    fetchSearchResults(query);
+                }, 400);
+            } else {
+                document.getElementById("searchResults").innerHTML = "";
+            }
+        });
+
+    function fetchSearchResults(query) {}
 });
-
-document.getElementById("searchListing").addEventListener("keyup", function () {
-    clearTimeout(timeoutId);
-    const query = this.value;
-
-    if (query.length > 2) {
-        timeoutId = setTimeout(() => {
-            fetchSearchResults(query);
-        }, 400);
-    }else{
-        document.getElementById('searchResults').innerHTML = '';
-    }
-});
-
-function fetchSearchResults(query){
-    
-}
