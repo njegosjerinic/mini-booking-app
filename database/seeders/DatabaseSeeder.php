@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use Spatie\Permission\Models\Role;
+use App\Models\City;
+use App\Models\Listing;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,19 +15,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::disableForeignKeyConstraints();
 
-        DB::table('listings')->truncate();
-        DB::table('cities')->truncate();
-        DB::table('users')->truncate();
+        Listing::truncate();
+        City::truncate();
+        User::truncate();
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        Schema::enableForeignKeyConstraints();
 
-        // Poziv svih ostalih seedera
         $this->call([
             CitySeeder::class,
             ListingSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
         ]);
     }
 }
