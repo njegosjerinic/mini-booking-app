@@ -1,35 +1,56 @@
 document.addEventListener("DOMContentLoaded", function () {
-    timeoutId = null;
+    let timeoutId = null;
 
     document.querySelectorAll(".reservation-form").forEach((form) => {
-        let startInput = form.querySelector(".start_date");
-        let endInput = form.querySelector(".end_date");
+        const startInput = form.querySelector(".start_date");
+        const endInput = form.querySelector(".end_date");
 
-        startInput.addEventListener("input", function () {
-            // Set the minimum allowed date for end_date
-            endInput.min = startInput.value;
+        if (startInput && endInput) {
+            startInput.addEventListener("input", function () {
+                endInput.min = startInput.value;
 
-            // If end_date is before start_date, reset it
-            if (endInput.value < startInput.value) {
-                endInput.value = startInput.value;
-            }
-        });
+                if (endInput.value < startInput.value) {
+                    endInput.value = startInput.value;
+                }
+            });
+        }
     });
 
-    document
-        .getElementById("searchListing")
-        .addEventListener("keyup", function () {
+    const searchInput = document.getElementById("searchListing");
+    const searchResults = document.getElementById("searchResults");
+
+    if (searchInput && searchResults) {
+        searchInput.addEventListener("keyup", function () {
             clearTimeout(timeoutId);
-            const query = this.value;
+
+            const query = this.value.trim();
 
             if (query.length > 2) {
                 timeoutId = setTimeout(() => {
                     fetchSearchResults(query);
                 }, 400);
             } else {
-                document.getElementById("searchResults").innerHTML = "";
+                searchResults.innerHTML = "";
             }
         });
+    }
 
-    function fetchSearchResults(query) {}
+    async function fetchSearchResults(query) {
+        try {
+            const response = await fetch(
+                `/listings/search?query=${encodeURIComponent(query)}`,
+            );
+
+            if (!response.ok) {
+                throw new Error("Greška prilikom pretrage");
+            }
+
+            const html = await response.text();
+            searchResults.innerHTML = html;
+        } catch (error) {
+            console.error(error);
+            searchResults.innerHTML =
+                "<p class='text-danger'>Došlo je do greške.</p>";
+        }
+    }
 });
