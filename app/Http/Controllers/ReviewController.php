@@ -15,7 +15,7 @@ class ReviewController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->is_admin) {
+        if (auth()->user()->isAdmin()) {
             $reviews = Review::with(['user', 'listing'])->get();
         } else {
             $reviews = Review::with(['user', 'listing'])
@@ -29,26 +29,31 @@ class ReviewController extends Controller
 
     public function create(Reservation $reservation)
     {
+        if ($reservation->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $reservation->load('listing');
         return Inertia::render('Reviews/Create', compact('reservation'));
     }
 
     public function store(StoreReviewRequest $request)
     {
-        try {
-            $reservation = Reservation::findOrFail($request->reservation_id);
+        $reservation = Reservation::findOrFail($request->reservation_id);
 
-            // ownership check
-            if ($reservation->user_id !== auth()->id()) {
-                abort(403);
-            }
+        // ownership check
+        if ($reservation->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        try {
 
             // finished reservation check
-            if ($reservation->end_date > now()) {
+            if ($reservation->end_date->isFuture()) {
                 return back(303)->with('error', 'Ne možeš ostaviti recenziju prije završetka rezervacije');
             }
 
-            $review = Review::create([
+            Review::create([
                 'user_id' => auth()->id(),
                 'listing_id' => $reservation->listing_id,
                 'reservation_id' => $reservation->id,

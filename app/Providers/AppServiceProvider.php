@@ -26,6 +26,13 @@ class AppServiceProvider extends ServiceProvider
                     'user' => auth()->user(),
                 ];
             },
+
+            'flash' => function () {
+                return [
+                    'success' => session('success'),
+                    'error' => session('error'),
+                ];
+            }
         ]);
     }
 }
