@@ -4,7 +4,6 @@ import React from "react";
 
 export default function Index() {
     const { listings, cities } = usePage().props;
-    console.log("react radi");
 
     const handleSubmit = (e) => {
         e.preventDefault();

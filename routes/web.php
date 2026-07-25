@@ -59,7 +59,7 @@ Route::middleware(['auth', 'role:user', 'prevent-back-history'])->group(function
         abort(404);
     })->where('reservation', '[0-9A-Za-z-_]+');
 
-    Route::resource('reviews', ReviewController::class);
+    Route::resource('reviews', ReviewController::class)->only(['index', 'store']);
 
     Route::get('reviews/{review}', function () {
         abort(404);
